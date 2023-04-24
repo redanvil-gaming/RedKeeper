@@ -1,15 +1,22 @@
+--[[
+
+  Fuck my Life of File Loader (and database)
+
+--]]
+
+
 local fs = require("filesystem")
 local serialization = require("serialization")
 local base64 = require("base64")
 local strictness = require("strictness")
 
-local L = {}
-local Item = {}
-local Item_obj = {}
+local L = {} -- local namespace ( L - Library)
+local Item = {} -- class
+local Item_obj = {} -- class object
 local Item_fmt = string.format("T-%%-%dd [%%1s] %%-%ds %%%dd/%%-%dd", 2, 40, 5, 5)
 L.Item = Item
-local DB = {}
-local DB_obj = {}
+local DB = {} -- Data Base
+local DB_obj = {} -- Data Base object
 L.DB = DB
 L.docs = {}
 L.docs.Item = {}
