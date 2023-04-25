@@ -1,3 +1,5 @@
+package.path = './RedKeeper/?.lua;' .. package.path
+
 thread = require("thread")
 
 function main()
