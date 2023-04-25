@@ -1,4 +1,6 @@
-package.path = './RedKeeper/?.lua;' .. package.path
+local thispath = select("1", ...):match(".+%.") or ""
+
+package.path = string.format("./%s/?.lua;%s", thispath, package.path)
 
 thread = require("thread")
 
