@@ -18,11 +18,7 @@ L.Item = Item
 local DB = {}
 local DB_obj = {}
 L.DB = DB
-L.docs = {}
-L.docs.Item = {}
-L.docs.Item_obj = {}
-L.docs.DB = {}
-L.docs.DB_obj = {}
+
 
 local item_obj_fields = {"spec", "display_name", "tier", "id", "required_amount"}
 local item_obj_spec_fields = {"name", "label", "charge", "damage"}
