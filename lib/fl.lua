@@ -2,6 +2,13 @@ local fs = require("filesystem")
 local serialization = require("serialization")
 local base64 = require("base64")
 local strictness = require("strictness")
+local tablefunc = require("tablefunc")
+
+-- local funcDoc = function(func, string) -- not sure if its a good idea
+--   func = tablefunc(func, string)
+-- end
+
+-- TODO (RedMage) : rename L to fl
 
 local L = {}
 local Item = {}
@@ -32,18 +39,24 @@ function Item:new()
   item.spec = strictness.strict({}, table.unpack(item_obj_spec_fields))
   return item
 end
-function L.docs.Item.new()
-  print("class function Item:new() or Item()\ncreates a blank strict Item instance with methods attached")
-end
+Item.new = tablefunc.funcWrapper(Item.new,
+[[class function Item:new() or Item()
+creates a blank strict Item instance with methods attached]])
 setmetatable(Item, { __call = Item.new })
 
 
 function Item_obj:format(state, current)
   return string.format(Item_fmt, self.tier or -1, state, self.display_name, current, self.required_amount)
 end
-function L.docs.Item_obj.format()
-  print("bound function Item_obj:format()\nFormats item for display\nparams:\n  state: string; state label\n    `c` for crafting\n    `-` for needs to be crafted\n    `+` for stored\n  current: number, current items in stock\nreturns: str, formatted string")
-end
+Item_obj.format = tablefunc.funcWrapper(Item_obj.format, -- TODO(RedMage) : document '?' state
+[[bound function Item_obj:format()
+Formats item for display\nparams:
+state: string; state label
+  `c` for crafting
+  `-` for needs to be crafted
+  `+` for stored\n  current: number, current items in stock
+returns: str, formatted string]])
+
 
 
 function Item_obj:spec_weak_eq(spec)
@@ -59,9 +72,12 @@ function Item_obj:spec_weak_eq(spec)
   end
   return true
 end
-function L.docs.Item_obj.spec_weak_eq()
-  print("bound function Item_obj:spec_weak_eq()\nchecks if item spec corresponds to given spec, `nil` equals to anything\nparams:\n  spec: table, as returned from getStackFromSlot or simmilar")
-end
+Item_obj.spec_weak_eq = tablefunc.funcWrapper(Item_obj.spec_weak_eq,
+[[bound function Item_obj:spec_weak_eq()
+  checks if item spec corresponds to given spec, `nil` equals to anything
+  params:
+    spec: table, as returned from getStackFromSlot or simmilar]]) 
+
 
 
 function Item_obj:_dump()
@@ -75,10 +91,10 @@ function Item_obj:_dump()
   end
   return serialized
 end
-
-function L.docs.Item_obj._dump()
-  print("bound function Item_obj:dump()\nPrepares item to be dumped on disk\nreturns: str, new non-strict table with escaped fields")
-end
+Item_obj._dump = tablefunc.funcWrapper(Item_obj._dump,
+[[bound function Item_obj:dump()
+  Prepares item to be dumped on disk
+  returns: str, new non-strict table with escaped fields]])
 
 
 function Item:create(options)
@@ -121,9 +137,24 @@ function Item:create(options)
   item.spec.damage = options.damage
   return item
 end
-function L.docs.Item.create()
-  print("class function Item:create{}\nconvinience function to create item from flat keyword structure\nneeds to be called with curly braces\nexample:\n  Item:create{name=\"Item name\", required=10, id=14}\nparams:\n  name: required, string; raw mc name of the item\n  required: required, number; amount of items to keep in stock\n  id: required, number; internal item id\n  tier: optional, number; tier or priority of an item, if nil item is always watched, if n number will be attempted to be crafted only after all items with tier less than n are stocked\n  label: optional, string; raw mc label of the item\n  tag: optional, string; raw mc tag of the item\n  charge: optional, number; raw mc charge value of the item\n  damage: optional, number; raw mc damage value of the item\n  display: optional, string; display name for the item, if nil label or name is substituted\nreturns: Item, created item")
-end
+Item.create = tablefunc.funcWrapper(Item.create, 
+[[class function Item:create{}
+  convinience function to create item from flat keyword structure
+  needs to be called with curly braces
+  example:
+    Item:create{name="Item name", required=10, id=14}
+  params:
+    name: required, string; raw mc name of the item
+    required: required, number; amount of items to keep in stock
+    id: required, number; internal item id
+    tier: optional, number; tier or priority of an item, if nil item is always watched, if n number will be attempted to be crafted only after all items with tier less than n are stocked
+    label: optional, string; raw mc label of the item
+    tag: optional, string; raw mc tag of the item
+    charge: optional, number; raw mc charge value of the item
+    damage: optional, number; raw mc damage value of the item
+    display: optional, string; display name for the item, if nil label or name is substituted
+returns: Item, created item]])
+
 
 
 function Item:load(unserialized)
@@ -141,9 +172,13 @@ function Item:load(unserialized)
     damage=unserialized.spec.damage,
   }
 end
-function L.docs.Item.load()
-  print("class function Item:load()\ninverse of Item_obj:dump(), restores escaped representation into regular one\nparams:\n  uncerialized: table; table read from disk\nreturns: Item, restored item")
-end
+Item.load = tablefunc.funcWrapper(Item.load, 
+[[class function Item:load()
+  inverse of Item_obj:dump(), restores escaped representation into regular one
+  params:
+    uncerialized: table; table read from disk
+returns: Item, restored item]])
+
 
 
 function L.load(filename)
@@ -162,9 +197,13 @@ function L.load(filename)
   file:close()
   return data
 end
-function L.docs.load()
-  print("function load()\nloads full item database from file\nparams:\n  filename: string; file to read from\nreturns: table, {tier: {number: Item}}")
-end
+L.load = tablefunc.funcWrapper(L.load,
+[[function load()
+  loads full item database from file
+  params:
+    filename: string; file to read from
+returns: table, {tier: {number: Item}}]])
+
 
 function L.save(filename, tiers)
   local file, err = io.open(filename, "w")
@@ -181,9 +220,14 @@ function L.save(filename, tiers)
   file:write(serialization.serialize(post_data))
   file:close()
 end
-function L.docs.save()
-  print("function save()\nsaves items list to file\nparams:\n  filename: string; file to write to\nitems: table, {tier: {number: Item}}")
-end
+L.save = tablefunc.funcWrapper(L.save, 
+[[function save()
+  saves items list to file
+  params:
+    filename: string; file to write to
+    items: table, {tier: {number: Item}}
+]])
+
 
 -- Database part
 
@@ -208,27 +252,35 @@ function DB:new(filename)
   db:refresh()
   return db
 end
-function L.docs.DB.new()
-  print("class function DB:new()\ncreates database object\nparams:\n  filename: string; file for database, will be created if does not exist\nreturns DB_obj; new db")
-end
+DB.new = tablefunc.funcWrapper(DB.new,
+[[class function DB:new()
+  creates database object
+  params:
+    filename: string; file for database, will be created if does not exist
+returns DB_obj; new db
+]])
 setmetatable(DB, { __call = DB.new })
 
 
-function DB_obj:filename()
+function DB_obj:filename() 
   return self._filename
 end
-function L.docs.DB_obj.filename()
-  print("bound function DB_obj:filename()\ngetter for filename\nreturns string; db filename")
-end
+DB_obj.filename = tablefunc.funcWrapper(DB_obj.filename,
+[[bound function DB_obj:filename()
+  getter for filename
+returns string; db filename]])
+
 
 
 function DB_obj:take_id()
   self._item_seq = self._item_seq + 1
   return self._item_seq
 end
-function L.docs.DB_obj.take_id()
-  print("bound function DB_obj:take_id()\ngenerate new ID\nreturns number; unused ID")
-end
+DB_obj.take_id = tablefunc.funcWrapper(DB_obj.take_id, 
+[[bound function DB_obj:take_id()
+  generate new ID
+returns number; unused ID]])
+
 
 
 function DB_obj:db_exists()
@@ -239,17 +291,20 @@ function DB_obj:db_exists()
   end
   return false
 end
-function L.docs.DB_obj.db_exists()
-  print("bound function DB_obj:db_exists()\ncheck if database exists\nreturns bool; true if exists")
-end
+DB_obj.db_exists = tablefunc.funcWrapper(DB_obj.db_exists,
+[[bound function DB_obj:db_exists()
+  check if database exists
+  returns bool; true if exists]])
+
 
 
 function DB_obj:flush()
   L.save(self:filename(), self._items)
 end
-function L.docs.DB_obj.flush()
-  print("bound function DB_obj:flush()\nflushes internal state on disk")
-end
+DB_obj.flush = tablefunc.funcWrapper(DB_obj.flush, 
+[[bound function DB_obj:flush()
+  flushes internal state on disk]])
+
 
 
 function DB_obj:refresh()
@@ -263,9 +318,10 @@ function DB_obj:refresh()
     end
   end
 end
-function L.docs.DB_obj.refresh()
-  print("bound funciton DB_obj:refresh()\nreads contents from disl")
-end
+DB_obj.refresh = tablefunc.funcWrapper(DB_obj.refresh,
+[[bound funciton DB_obj:refresh()
+reads contents from disl]])
+
 
 
 function DB_obj:add(options)
@@ -286,9 +342,15 @@ function DB_obj:add(options)
   self._items[addition.tier][addition.id] = addition
   self:flush()
 end
-function L.docs.DB_obj.add()
-  print("bound function DB_obj:add()\nadds item to database with new id\nsee docs.Item.create() for more info\nadditional mentions:\n  if id is not provided it is substituted by db:take_id()\nadditional params:\n  stack: optional, table; table returned from getStackInSlot() or simmilar functions, has lower priority than directly specified params.")
-end
+DB_obj.add = tablefunc.funcWrapper(DB_obj.add, 
+[[bound function DB_obj:add()
+  adds item to database with new id
+  see docs.Item.create() for more info
+  additional mentions:
+    if id is not provided it is substituted by db:take_id()
+  additional params:
+    stack: optional, table; table returned from getStackInSlot() or simmilar functions, has lower priority than directly specified params.]])
+
 
 
 function DB_obj:delete(item)
@@ -304,12 +366,15 @@ function DB_obj:delete(item)
   end
   self:flush()
 end
-function L.docs.DB_obj.delete()
-  print("bound function DB_obj:delete()\nremoves item from database\nparams:\n  item: Item_obj; must have tier and id fields set")
-end
+DB_obj.delete = tablefunc.funcWrapper(DB_obj.delete,
+[[bound function DB_obj:delete()
+  removes item from database
+  params:
+    item: Item_obj; must have tier and id fields set]])
 
 
-local function tier_iterator(state, idx)
+
+local function tier_iterator(state, idx) --internal function no documentation needed
   if state == nil then
     return nil
   end
@@ -325,9 +390,13 @@ end
 function DB_obj:iter_tier(tier)
   return tier_iterator, self._items[tier], { id = nil }
 end
-function L.docs.DB_obj.iter_tier()
-  print("bound function DB_obj:iter_tier()\niterates over items of specific tier\nparams:\n  tier: number; tier number\nreturns: iterator of Item_obj for specifed tier\nexample:\n  for item in db:iter_tier(0) do ... end")
-end
+DB_obj.iter_tier = tablefunc.funcWrapper(DB_obj.iter_tier,
+[[bound function DB_obj:iter_tier()
+  iterates over items of specific tier\nparams:
+    tier: number; tier number\nreturns: iterator of Item_obj for specifed tier
+  example:
+    for item in db:iter_tier(0) do ... end]]) 
+
 
 
 local function items_iterator(state, idx)
@@ -355,9 +424,13 @@ function DB_obj:iter_items()
   table.sort(self._items)
   return items_iterator, self._items, { tier = nil, id = nil }
 end
-function L.docs.DB_obj.iter_items()
-  print("bound function DB_obj:iter_items()\niterates over all items tier by tier\nreturns: iterator of Item_obj\nexample:\n  for item in db:iter_items() do ... end")
-end
+DB_obj.iter_items = tablefunc.funcWrapper(DB_obj.iter_items,
+[[bound function DB_obj:iter_items()
+  iterates over all items tier by tier
+returns: iterator of Item_obj
+  example:
+    for item in db:iter_items() do ... end]])
+
 
 
 return L
