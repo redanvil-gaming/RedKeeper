@@ -10,8 +10,8 @@ local function get_hidden_fields(state)
 end
 
 
-function RootStateIndex.add_dispatcher(state, tp, dispatcher)
-  get_hidden_fields(state).dispatchers[tp] = dispatcher
+function RootStateIndex.add_reducer(state, tp, reducer)
+  get_hidden_fields(state).reducers[tp] = reducer
 end
 
 
@@ -26,7 +26,7 @@ function RootStateIndex.dispatch(state, tp, data)
 end
 
 
-local function set_dispatcher(state, data)
+local function set_reducer(state, data)
   local current = state
   local callbacks = {}
   for idx, token in ipairs(data.path) do
@@ -43,10 +43,10 @@ local function set_dispatcher(state, data)
 end
 
 
-local function multiset_dispatcher(state, data)
+local function multiset_reducer(state, data)
   local callbacks = {}
   for idx, entry in pairs(data) do
-    for idx, callback in ipairs(set_dispatcher(state, entry)) do
+    for idx, callback in ipairs(set_reducer(state, entry)) do
       table.insert(callbacks, callback)
     end
   end
@@ -90,9 +90,9 @@ local function create_empty_state(parent)
 
   if parent == nil then
     state_hidden_fields.root_parent = state
-    state_hidden_fields.dispatchers = { 
-      SET = set_dispatcher,
-      MULTISET = multiset_dispatcher,
+    state_hidden_fields.reducers = { 
+      SET = set_reducer,
+      MULTISET = multiset_reducer,
     }   
     index = RootStateIndex
   else 

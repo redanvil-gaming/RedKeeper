@@ -49,6 +49,14 @@ return function(state, parent)
     page_counter.text = string.format("page: %d/%d", state.listing.pagination.current, state.listing.pagination.total)
   end)
 
+  prev.onTouch = function()
+    state:dispatch("DEC_PAGE")
+  end
+
+  nxt.onTouch = function()
+    state:dispatch("INC_PAGE")
+  end
+
   footer:setPosition(1, 1, prev)
   footer:setPosition(2, 1, page_counter)
   footer:setPosition(3, 1, nxt)

@@ -1,6 +1,7 @@
 local make_state = require "lib.state"
+local bind_reducers = require "reducers"
 
-local state = make_state({
+local state = bind_reducers(make_state({
   sz = {
     body = {
       y_offset = 2,
@@ -61,7 +62,7 @@ local state = make_state({
   health = {
     running = true,
   }
-})
+}))
 
 local workspace = GUI.workspace()
 
