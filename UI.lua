@@ -5,6 +5,7 @@ local state = make_state({
     body = {
       y_offset = 2,
       header_size = 3,
+      footer_size = 1,
     },
     listing = {
       columns = 2,
@@ -42,7 +43,10 @@ local state = make_state({
   },
   listing = {
     content = {},
-    page = 1,
+    pagination = {
+      current = 1,
+      total = 5,
+    },
   },
   health = {
     running = true,
