@@ -1,3 +1,5 @@
+local make_state = require "lib.state"
+
 local cs = {
   bg = 0x262626,
   menu = {
@@ -25,7 +27,7 @@ local sz = {
   }
 }
 
-local state = {
+local state = make_state({
   cpus = {
     available = 10,
     used = 5,
@@ -40,10 +42,14 @@ local state = {
     waiting = 2,
     total = 3,
   },
-  running = true,
-  listing = {},
-  page = 1,
-}
+  listing = {
+    content = {},
+    page = 1,
+  },
+  health = {
+    running = true,
+  }
+})
 
 local workspace = GUI.workspace()
 
@@ -52,7 +58,7 @@ workspace:addChild(GUI.panel(1, 1, workspace.width, workspace.height, cs.bg))
 local menu = require("menu")(state, workspace, cs.menu)
 local body = require("body")(state, workspace, sz.menu, sz.body, cs.body)
 
-body.update_data()
+state:update_all()
 
 --------------------------------------------------------------------------------
 

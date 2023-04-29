@@ -19,25 +19,26 @@ return function(state, parent, cs)
     old_draw(header)
   end
 
-  header.updaters = {
+  state.tier:subscribe(
     function()
       tier_label.text = string.format("Tier: %d/%d", state.tier.current, state.tier.max)
-    end,
+    end
+  )
+  state.cpus:subscribe(
     function()
       cpus_label.text = string.format("CPUs: %d/%d", state.cpus.used, state.cpus.available)
-    end,
+    end
+  )
+  state.stats:subscribe(
     function()
       scwt_label.text = string.format("S/C/W/T: %d/%d/%d/%d", state.stats.stocked, state.stats.crafting, state.stats.waiting, state.stats.total)
-    end,
-    function()
-      running_label.text = string.format("Running: %s", tostring(state.running))
-    end,
-  }
-  header.update_data = function()
-    for idx, updater in pairs(header.updaters) do
-      updater()
     end
-  end
+  )
+  state.health:subscribe
+    function()
+      running_label.text = string.format("Running: %s", tostring(state.health.running))
+    end
+  )
 
   return header
 end

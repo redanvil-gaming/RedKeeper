@@ -15,10 +15,5 @@ return function(state, parent, y, sz, cs)
   body:setFitting(1, 1, 1, 1)
   body:setPosition(1, 2, listing)
   body:setFitting(1, 2, 1, 1)
-
-  body.update_data = function()
-    header.update_data()
-  end
-
   return body
 end
