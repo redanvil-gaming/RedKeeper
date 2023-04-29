@@ -14,7 +14,7 @@ end
 
 local function bind(state)
   for name, reducer in pairs(reducers) do
-    state:set_reducer(name, reducer)
+    state:set_reducer(string.upper(name), reducer)
   end
   return state
 end
