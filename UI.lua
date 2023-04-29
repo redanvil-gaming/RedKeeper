@@ -53,7 +53,7 @@ menu:addItem("Set branch").onTouch = function()
     file:write(input.text)
     file:close()
   end
-	container.layout:addChild(GUI.switchAndLabel(1, 1, 36, 8, 0x66DB80, 0x2D2D2D, 0xE1E1E1, 0x878787, "Flick me:", true))
+	container.layout:addChild(input)
   workspace:draw()
 end
 
