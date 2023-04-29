@@ -1,39 +1,62 @@
-local function make_row(state, parent, row)
-  local layout = parent:addChild(GUI.layout(
-    1, 1, 1, 1,
-    1, 1
-  ))
-  layout:setPosition(1, 1, layout:addChild(GUI.text(1, 1, 0, string.format("Row №%d", row))))
-  return layout
-end
-
-
-local function redraw_columns(listing)
-  local col_c = listing._private.col_c
-  local row_h = listing._private.row_h
-  local col_w = math.floor(listing.width / col_c)
-  local row_c = math.floor(listing.height / row_h)
+local function redraw_rows(column)
+  local row_h = column._row_h
+  local col_c = column._field_c
+  local row_c = math.floor(column.height / row_h)
 
   listing:setGridSize(col_c, row_c)
   for r=1, row_c do
     listing:setRowHeight(r, GUI.SIZE_POLICY_ABSOLUTE, row_h)
   end
+
+  if #listing.children > row_c * col_c then
+    listing:removeChildren(row_c + 1, #listing.children)
+  end
+end
+
+local function listing_column(listing, col)
+  local layout = parent:addChild(GUI.layout(
+    1, 1, parent.width, 1,
+    1, 1
+  ))
+
+  layout._row_h = 1
+  layout._field_c = 4
+  layout._col = col
+
+  local old_update = layout.update
+  layout.update = function()
+    redraw_rows(layout)
+    old_update(layout)
+  end
+
+  layout.set_row_h = function(layout, row_h) 
+    layout._row_h = row_h
+    layout.update()
+  end)
+
+  return layout
+end
+
+local function redraw_columns(listing)
+  local col_c = listing._private.col_c
+  local col_w = math.floor(listing.width / col_c)
+
+  listing:setGridSize(col_c, 1)
   for c=1, col_c do
     listing:setColumnWidth(c, GUI.SIZE_POLICY_ABSOLUTE, col_w)
   end
-  if #listing.children > row_c * col_c then
-    listing:removeChildren(row_c * col_c + 1, #listing.children)
+  if #listing.children > col_c then
+    listing:removeChildren(col_c + 1, #listing.children)
   end
-  if #listing.children < row_c * col_c then
-    for row=#listing.children + 1, row_c * col_c do
-      make_row(state, listing, row)
+  if #listing.children < col_c then
+    for col=#listing.children + 1, col_c do
+      listing_column(listing, col)
     end
   end
   for col=1, col_c do
-    for row=1, row_c do
-      listing:setPosition(col, row, listing.children[(col - 1) * row_c + row])
-      listing:setFitting(col, row, true, true)
-    end
+    listing.children[col]:set_row_h(listing._private.row_h)
+    listing:setPosition(col, 1, listing.children[col])
+    listing:setFitting(col, 1, true, true)
   end
 end
 

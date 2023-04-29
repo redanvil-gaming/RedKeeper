@@ -40,7 +40,7 @@ local function set_reducer(state, data)
   local current = state
   local callbacks = {}
   for idx, token in ipairs(data.path) do
-    for i, callback in ipairs(get_hidden_fields(current).subscriptions) do
+    for i, callback in pairs(get_hidden_fields(current).subscriptions) do
       table.insert(callbacks, callback)
     end
     if idx == #data.path then
@@ -73,14 +73,18 @@ end
 
 
 local function state_subscribe(state, callback)
-  table.insert(get_hidden_fields(state).subscriptions, callback)
+  local key = "s"..#get_hidden_fields(state).subscriptions
+  get_hidden_fields(state).subscriptions[key] = callback
+  return function()
+    state[key] = nil
+  end
 end
 RootStateIndex.subscribe = state_subscribe
 ChildStateIndex.subscribe = state_subscribe
 
 
 local function update_all(state)
-  for idx, callback in ipairs(get_hidden_fields(state).subscriptions) do
+  for idx, callback in pairs(get_hidden_fields(state).subscriptions) do
     callback(get_hidden_fields(state).root_parent)
   end
 
