@@ -16,11 +16,11 @@ end
 
 
 function RootStateIndex.dispatch(state, tp, data)
-  local dispatcher = get_hidden_fields(state).dispatchers[tp]
-  if dispatcher == nil then
+  local reducer = get_hidden_fields(state).reducers[tp]
+  if reducer == nil then
     return
   end 
-  for idx, callback in ipairs(dispatcher(state, data)) do
+  for idx, callback in ipairs(reducer(state, data)) do
     callback(state)
   end
 end
