@@ -32,7 +32,7 @@ return function(state, parent, cs)
       scwt_label.text = string.format("S/C/W/T: %d/%d/%d/%d", state.stats.stocked, state.stats.crafting, state.stats.waiting, state.stats.total)
     end,
     function()
-      running_label.text = string.format("Running: %s", if state.running then "true" else "false" end)
+      running_label.text = string.format("Running: %s", tostring(state.running))
     end,
   }
   header.update = function()
@@ -40,6 +40,6 @@ return function(state, parent, cs)
       updater()
     end
   end
-  
+
   return header
 end
