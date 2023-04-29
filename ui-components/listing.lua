@@ -42,7 +42,7 @@ return function(state, parent)
   end
 
   state.sz.listing:subscribe(function(state) 
-    listing:redraw_columns(state)
+    layout:redraw_columns(state)
   end)
 
   return layout
