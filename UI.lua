@@ -53,7 +53,7 @@ local workspace = GUI.workspace()
 
 workspace:addChild(GUI.panel(1, 1, workspace.width, workspace.height, state.cs.main.bg))
 
-local menu = require("menu")(state, workspace, cs.menu)
+local menu = require("menu")(state, workspace, state.cs.menu)
 local body = require("body")(state, workspace)
 
 state:update_all()
