@@ -15,7 +15,7 @@ return function(state, parent)
 
     
   state.sz.body:subscribe(function(state)
-    body.y = state.sz.body.y_offset
+    body.localY = state.sz.body.y_offset
     body:setRowHeight(1, GUI.SIZE_POLICY_ABSOLUTE, state.sz.body.header_size)
     body:setRowHeight(2, GUI.SIZE_POLICY_ABSOLUTE, body.height - state.sz.body.header_size)  
   end)

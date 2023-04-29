@@ -19,12 +19,12 @@ return function(state, parent)
     old_draw(header)
   end
 
-  state.cs.header:subscribe(
+  state.cs.header:subscribe(function(state)
     tier_label.textColor = state.cs.header.fg
     cpus_label.textColor = state.cs.header.fg
     scwt_label.textColor = state.cs.header.fg
     running_label.textColor = state.cs.header.fg
-  )
+  end)
 
   state.tier:subscribe(
     function(state)

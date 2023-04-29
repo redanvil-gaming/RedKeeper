@@ -5,14 +5,16 @@ local state = make_state({
     body = {
       y_offset = 2,
       header_size = 3,
-    }
+    },
     listing = {
       columns = 2,
       row_h = 3,
     }
   },
   cs = {
-    bg = 0x262626,
+    main = {
+      bg = 0x262626,
+    },
     menu = {
       bg = 0xEEEEEE,
       fg = 0x666666,
@@ -49,7 +51,7 @@ local state = make_state({
 
 local workspace = GUI.workspace()
 
-workspace:addChild(GUI.panel(1, 1, workspace.width, workspace.height, cs.bg))
+workspace:addChild(GUI.panel(1, 1, workspace.width, workspace.height, state.cs.main.bg))
 
 local menu = require("menu")(state, workspace, cs.menu)
 local body = require("body")(state, workspace)
