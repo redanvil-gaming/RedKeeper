@@ -33,13 +33,13 @@ local state = {
   tier = {
     current = 2,
     max = 5,
-  }
+  },
   stats = {
     stocked = 0,
     crafting = 1,
     waiting = 2,
     total = 3,
-  }
+  },
   running = true,
   listing = {},
   page = 1,
