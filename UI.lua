@@ -59,25 +59,8 @@ cs_menu:addItem("Copy sizes")
 cs_menu:addItem("Alter sizes")
 cs_menu:addItem("Delete sizes")
 
-local body = workspace:addChild(GUI.container(1, sz.menu, workspace.width, workspace.height - sz.menu))
 
-local header = workspace:addChild(GUI.list(
-  1, sz.menu, body.width, sz.header.h,
-  sz.header.itemSize, sz.header.spacing,
-  cs.header.bg, cs.header.fg,
-  true))
-header:setDirection(GUI.DIRECTION_HORIZONTAL)
-header:setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_TOP)
-
-local tierWatcher = header:addChild(GUI.label(1, 1, 20, header.height, cs.header.fg, "Tier: 2/5")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_CENTER)
-
-local cpuWatcher = header:addChild(GUI.label(1, 1, 20, header.height, cs.header.fg, "CPUS: 10/10")):setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_CENTER) 
-
-local listing = body:addChild(GUI.layout(1, sz.header.h, body.width, body.height - sz.header.h, 2, 1)) 
-
-
-
-local info
+local body = require("ui-components/body")(workspace, sz.menu, sz, cs)
 
 --------------------------------------------------------------------------------
 
