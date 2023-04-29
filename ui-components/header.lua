@@ -33,7 +33,7 @@ return function(state, parent, cs)
       running_label.text = string.format("Running: %s", tostring(state.running))
     end,
   }
-  header.update = function()
+  header.update_data = function()
     for idx, updater in pairs(header.updaters) do
       updater()
     end
