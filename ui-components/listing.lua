@@ -1,7 +1,7 @@
 local function redraw_rows(column)
   local row_h = column._row_h
   local col_c = column._field_c
-  local row_c = math.floor(column.height / row_h)
+  local row_c = column._row_c
 
   column:setGridSize(col_c, row_c)
   for r=1, row_c do
@@ -20,7 +20,7 @@ local function listing_column(parent, col)
   ))
 
   layout._row_h = 1
-  layout._field_c = 4
+  layout._field_c = 6
   layout._col = col
 
   local old_update = layout.update
@@ -31,8 +31,25 @@ local function listing_column(parent, col)
 
   layout.set_row_h = function(layout, row_h) 
     layout._row_h = row_h
+    layout._row_c = math.floor(column.height / row_h)
+
     layout.update()
   end)
+
+  layout.set_values = function(layout, items)
+    for r=1, layout._row_c do
+      local item = items[(layout._col - 1) * layout._row_c + r]
+      if item == nil then
+        break
+      end
+      layout:setPosition(1, r, layout:addChild(GUI.text(1, 1, 0, string.format("T: %s", item.tier))))
+      layout:setPosition(2, r, layout:addChild(GUI.text(1, 1, 0, tostring(item.status))))
+      layout:setPosition(3, r, layout:addChild(GUI.text(1, 1, 0, item.display_name)))
+      layout:setPosition(4, r, layout:addChild(GUI.text(1, 1, 0, tostring(item.stock))))
+      layout:setPosition(5, r, layout:addChild(GUI.text(1, 1, 0, "/")))
+      layout:setPosition(6, r, layout:addChild(GUI.text(1, 1, 0, tostring(item.required))))
+    end
+  end
 
   return layout
 end
@@ -90,6 +107,12 @@ return function(state, parent)
 
   state.listing.pagination:subscribe(function(state)
     state:dispatch("LOAD_PAGE", {page=state.listing.pagination.current, size=#layout.children})
+  end)
+
+  state.listing.pagination.content:subscribe(function(state)
+    for idx, col in ipairs(layout.children) do
+      col:set_values(state.listing.pagination.content)
+    end
   end)
 
 

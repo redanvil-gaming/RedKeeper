@@ -77,7 +77,7 @@ function Keeper_obj:get_page(page, size, filter)
       local status = self:item_status(item)
       if check_filter_match(item, status, stock, filter) then
         table.insert(results, {
-          name=item.display_name,
+          display_name=item.display_name,
           required=item.required_amount,
           tier=item.tier,
           status=status,
