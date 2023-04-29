@@ -49,9 +49,9 @@ return function(state, parent)
   }
 
   local old_update = layout.update
-  layout.update = function(listing)
-    redraw_columns(listing)
-    old_update(listing)
+  layout.update = function()
+    redraw_columns(layout)
+    old_update(layout)
   end
 
   state.sz.listing:subscribe(function(state) 
