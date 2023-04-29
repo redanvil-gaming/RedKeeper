@@ -2,7 +2,7 @@ local fs = require("filesystem")
 local serialization = require("serialization")
 local base64 = require("base64")
 local strictness = require("strictness")
-local tablefunc = require("tablefunc")
+local tablefunc = require "lib.tablefunc"
 
 -- local funcDoc = function(func, string) -- not sure if its a good idea
 --   func = tablefunc(func, string)

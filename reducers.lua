@@ -20,7 +20,7 @@ function reducers.inc_page(state, data)
 end
 
 function reducers.load_page(state, data)
-  state:dispatch("SET", {path = {"listing", "content"} value=state.get_blackbox["keeper"]:get_page(data.page, data.size, data.filter)})
+  state:dispatch("SET", {path = {"listing", "content"}, value=state:get_blackbox("keeper"):get_page(data.page, data.size, data.filter)})
   return {}
 end
 

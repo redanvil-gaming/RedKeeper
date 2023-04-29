@@ -1,6 +1,6 @@
 local make_state = require "lib.state"
-local keeperlib = request "lib.keeperlib"
-local dblib = request "lib.fl"
+local keeperlib = require "lib.keeperlib"
+local dblib = require "lib.fl"
 local bind_reducers = require "reducers"
 
 local state = bind_reducers(make_state({
@@ -66,10 +66,9 @@ local state = bind_reducers(make_state({
   }
 }))
 
-keeper = keeper.Keeper(dblib.DB("stock.db"), component.me_controller, keeperlib.IM(component.inventory_controller, sides.up, 1))
+keeper = keeperlib.Keeper(dblib.DB("stock.db"), component.me_controller, keeperlib.IM(component.inventory_controller, sides.up, 1))
 
-
-state.add_blackbox("keeper", keeper)
+state:add_blackbox("keeper", keeper)
 
 local workspace = GUI.workspace()
 
