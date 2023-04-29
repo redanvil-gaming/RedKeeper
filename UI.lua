@@ -1,33 +1,29 @@
 local make_state = require "lib.state"
 
-local cs = {
-  bg = 0x262626,
-  menu = {
-    bg = 0xEEEEEE,
-    fg = 0x666666,
-    pbg = 0x3366CC,
-    pfg = 0xFFFFFF,
+local state = make_state({
+  sz = {
+    body = {
+      y_offset = 2,
+      header_size = 3,
+    }
+    listing = {
+      columns = 2,
+      row_h = 3,
+    }
   },
-  body = {
+  cs = {
+    bg = 0x262626,
+    menu = {
+      bg = 0xEEEEEE,
+      fg = 0x666666,
+      pbg = 0x3366CC,
+      pfg = 0xFFFFFF,
+    },
     header = {
       bg = 0x363636,
       fg = 0x0,
     },
-  }
-}
-
-local sz = {
-  menu = 2,
-  body = {
-    header = {
-      h = 3,
-      itemSize = 3,
-      spacing = 5,
-    },
-  }
-}
-
-local state = make_state({
+  },
   cpus = {
     available = 10,
     used = 5,
@@ -56,7 +52,7 @@ local workspace = GUI.workspace()
 workspace:addChild(GUI.panel(1, 1, workspace.width, workspace.height, cs.bg))
 
 local menu = require("menu")(state, workspace, cs.menu)
-local body = require("body")(state, workspace, sz.menu, sz.body, cs.body)
+local body = require("body")(state, workspace)
 
 state:update_all()
 

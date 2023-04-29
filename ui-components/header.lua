@@ -1,23 +1,30 @@
-return function(state, parent, cs)
+return function(state, parent)
   local header = parent:addChild(GUI.layout(
     1, 1, parent.width, 1,
     4, 1
   ))
   
-  local tier_label = GUI.text(1, 1, cs.fg, "???")
+  local tier_label = GUI.text(1, 1, 0, "???")
   header:setPosition(1, 1, header:addChild(tier_label))
-  local cpus_label = GUI.text(1, 1, cs.fg, "???")
+  local cpus_label = GUI.text(1, 1, 0, "???")
   header:setPosition(2, 1, header:addChild(cpus_label))
-  local scwt_label = GUI.text(1, 1, cs.fg, "???")
+  local scwt_label = GUI.text(1, 1, 0, "???")
   header:setPosition(3, 1, header:addChild(scwt_label))
-  local running_label = GUI.text(1, 1, cs.fg, "???")
+  local running_label = GUI.text(1, 1, 0, "???")
   header:setPosition(4, 1, header:addChild(running_label))
   
   local old_draw = header.draw
   header.draw = function(header)
-    screen.drawRectangle(header.x, header.y, header.width, header.height, cs.bg, cs.fg, " ")
+    screen.drawRectangle(header.x, header.y, header.width, header.height, state.cs.header.bg, state.cs.header.fg, " ")
     old_draw(header)
   end
+
+  state.cs.header:subscribe(
+    tier_label.textColor = state.cs.header.fg
+    cpus_label.textColor = state.cs.header.fg
+    scwt_label.textColor = state.cs.header.fg
+    running_label.textColor = state.cs.header.fg
+  )
 
   state.tier:subscribe(
     function(state)

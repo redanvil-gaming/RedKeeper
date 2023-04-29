@@ -4,8 +4,14 @@ local make_state
 local RootStateIndex = {}
 local ChildStateIndex = {}
 
+
 local function get_hidden_fields(state)
   return getmetatable(state).__hidden_fields
+end
+
+
+function RootStateIndex.add_dispatcher(state, tp, dispatcher)
+  get_hidden_fields(state).dispatchers[tp] = dispatcher
 end
 
 
@@ -14,7 +20,9 @@ function RootStateIndex.dispatch(state, tp, data)
   if dispatcher == nil then
     return
   end 
-  dispatcher(state, data)
+  for idx, callback in ipairs(dispatcher(state, data)) do
+    callback(state)
+  end
 end
 
 
@@ -31,9 +39,18 @@ local function set_dispatcher(state, data)
       current = current[token]
     end
   end
-  for idx, callback in ipairs(callbacks) do
-    callback(state)
+  return callbacks
+end
+
+
+local function multiset_dispatcher(state, data)
+  local callbacks = {}
+  for idx, entry in pairs(data) do
+    for idx, callback in ipairs(set_dispatcher(state, entry)) do
+      table.insert(callbacks, callback)
+    end
   end
+  return callbacks
 end
 
 
@@ -75,6 +92,7 @@ local function create_empty_state(parent)
     state_hidden_fields.root_parent = state
     state_hidden_fields.dispatchers = { 
       SET = set_dispatcher,
+      MULTISET = multiset_dispatcher,
     }   
     index = RootStateIndex
   else 
