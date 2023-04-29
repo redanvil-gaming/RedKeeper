@@ -28,7 +28,7 @@ return function(state, parent)
     1, 1,
     0, 0, 
     state.cs.footer.button.bg, state.cs.footer.button.fg, 
-    state.cs.footer.button.pressed_bg, state.cd.footer.button.pressed_fg,
+    state.cs.footer.button.pressed_bg, state.cs.footer.button.pressed_fg,
     "next >"
   ))
 
