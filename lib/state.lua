@@ -18,7 +18,7 @@ function RootStateIndex.dispatch(state, tp, data)
 end
 
 
-function RootStateIndex.set_dispatcher(state, data)
+local function set_dispatcher(state, data)
   local current = state
   local callbacks = {}
   for idx, token in ipairs(data.path) do
@@ -37,20 +37,6 @@ function RootStateIndex.set_dispatcher(state, data)
 end
 
 
-function RootStateIndex.update_all(state)
-  local subscriptions = {}
-  for idx, callback in ipairs(get_hidden_fields(state)) do
-    callback(get_hidden_fields(state).root_parent)
-  end
-
-  for k, v in pairs(state) do
-    if v.update_all ~= nil then
-      v:update_all()
-    end
-  end
-end
-
-
 function ChildStateIndex.dispatch(state, tp, data)
   get_hidden_fields(state).root_parent:dispatch(type, data)
 end
@@ -61,6 +47,21 @@ local function state_subscribe(state, callback)
 end
 RootStateIndex.subscribe = state_subscribe
 ChildStateIndex.subscribe = state_subscribe
+
+
+local function update_all(state)
+  for idx, callback in ipairs(get_hidden_fields(state)) do
+    callback(get_hidden_fields(state).root_parent)
+  end
+
+  for k, v in pairs(state) do
+    if v.update_all ~= nil then
+      v:update_all()
+    end
+  end
+end
+RootStateIndex.update_all = update_all
+ChildStateIndex.update_all = update_all
 
 
 local function create_empty_state(parent)
