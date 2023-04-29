@@ -1,4 +1,4 @@
-return function(parent, cs)
+return function(state, parent, cs)
   local menu = parent:addChild(GUI.menu(1, 1, parent.width, cs.bg, cs.fg, cs.pbg, cs.pfg))
 
   menu:addItem("AE2 StockKeeper", 0x0)

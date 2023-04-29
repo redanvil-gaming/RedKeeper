@@ -25,12 +25,34 @@ local sz = {
   }
 }
 
+local state = {
+  cpus = {
+    available = 10,
+    used = 5,
+  },
+  tier = {
+    current = 2,
+    max = 5,
+  }
+  stats = {
+    stocked = 0,
+    crafting = 1,
+    waiting = 2,
+    total = 3,
+  }
+  running = true,
+  listing = {},
+  page = 1,
+}
+
 local workspace = GUI.workspace()
 
 workspace:addChild(GUI.panel(1, 1, workspace.width, workspace.height, cs.bg))
 
-local menu = require("menu")(workspace, cs.menu)
-local body = require("body")(workspace, sz.menu, sz.body, cs.body)
+local menu = require("menu")(state, workspace, cs.menu)
+local body = require("body")(state, workspace, sz.menu, sz.body, cs.body)
+
+body.update()
 
 --------------------------------------------------------------------------------
 

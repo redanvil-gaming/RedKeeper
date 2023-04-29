@@ -1,5 +1,5 @@
 
-return function(parent, y, sz, cs)
+return function(state, parent, y, sz, cs)
   local body = parent:addChild(GUI.layout(
     1, y, parent.width, parent.height,
     1, 2
@@ -16,5 +16,9 @@ return function(parent, y, sz, cs)
   body:setPosition(1, 2, listing)
   body:setFitting(1, 2, 1, 1)
 
+  body.update = function()
+    header.update()
+  end
+  
   return body
 end
