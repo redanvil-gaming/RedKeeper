@@ -20,10 +20,10 @@ return function(state, parent)
   end
 
   state.cs.header:subscribe(function(state)
-    tier_label.сolor = state.cs.header.fg
-    cpus_label.сolor = state.cs.header.fg
-    scwt_label.сolor = state.cs.header.fg
-    running_label.сolor = state.cs.header.fg
+    tier_label.color = state.cs.header.fg
+    cpus_label.color = state.cs.header.fg
+    scwt_label.color = state.cs.header.fg
+    running_label.color = state.cs.header.fg
   end)
 
   state.tier:subscribe(
