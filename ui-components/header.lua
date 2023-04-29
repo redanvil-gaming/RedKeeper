@@ -9,7 +9,7 @@ return function(state, parent, cs)
   local cpus_label = GUI.text(1, 1, cs.fg, "???")
   header:setPosition(2, 1, header:addChild(cpus_label))
   local scwt_label = GUI.text(1, 1, cs.fg, "???")
-  header:setPosition(3, 1, header:addChild(scwa_label))
+  header:setPosition(3, 1, header:addChild(scwt_label))
   local running_label = GUI.text(1, 1, cs.fg, "???")
   header:setPosition(4, 1, header:addChild(running_label))
   
