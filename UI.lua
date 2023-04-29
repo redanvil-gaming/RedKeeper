@@ -24,8 +24,18 @@ local state = make_state({
     },
     header = {
       bg = 0x363636,
-      fg = 0x0,
+      fg = 0xFFFFFF,
     },
+    footer = {
+      bg = 0x363636,
+      fg = 0xFFFFFF,
+      button = {
+        bg = 0x363636,
+        fg = 0xFFFFFF,
+        pressed_bg = 0x363636,
+        pressed_fg = 0xFFFFFF,
+      }
+    }
   },
   cpus = {
     available = 10,
