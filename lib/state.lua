@@ -50,7 +50,7 @@ ChildStateIndex.subscribe = state_subscribe
 
 
 local function update_all(state)
-  for idx, callback in ipairs(get_hidden_fields(state)) do
+  for idx, callback in ipairs(get_hidden_fields(state).subscriptions) do
     callback(get_hidden_fields(state).root_parent)
   end
 
