@@ -3,19 +3,19 @@ local function redraw_rows(column)
   local col_c = column._field_c
   local row_c = math.floor(column.height / row_h)
 
-  listing:setGridSize(col_c, row_c)
+  column:setGridSize(col_c, row_c)
   for r=1, row_c do
-    listing:setRowHeight(r, GUI.SIZE_POLICY_ABSOLUTE, row_h)
+    column:setRowHeight(r, GUI.SIZE_POLICY_ABSOLUTE, row_h)
   end
 
-  if #listing.children > row_c * col_c then
-    listing:removeChildren(row_c + 1, #listing.children)
+  if #column.children > row_c * col_c then
+    column:removeChildren(row_c + 1, #column.children)
   end
 end
 
-local function listing_column(listing, col)
+local function listing_column(parent, col)
   local layout = parent:addChild(GUI.layout(
-    1, 1, parent.width, 1,
+    1, 1, 1, 1,
     1, 1
   ))
 
