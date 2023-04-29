@@ -5,7 +5,7 @@ local state = make_state({
     body = {
       y_offset = 2,
       header_size = 3,
-      footer_size = 1,
+      footer_size = 2,
     },
     listing = {
       columns = 2,

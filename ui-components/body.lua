@@ -2,7 +2,7 @@
 return function(state, parent)
   local body = parent:addChild(GUI.layout(
     1, 1, parent.width, parent.height,
-    1, 2
+    1, 3
   ))
 
   local header = require("header")(state, body)
@@ -13,7 +13,7 @@ return function(state, parent)
   body:setFitting(1, 1, 1, 1)
   body:setPosition(1, 2, listing)
   body:setFitting(1, 2, 1, 1)
-  body:setPosition(1, 2, footer)
+  body:setPosition(1, 3, footer)
   body:setFitting(1, 3, 1, 1)
 
     

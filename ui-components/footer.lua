@@ -45,12 +45,12 @@ return function(state, parent)
     page_counter.color = state.cs.footer.fg
   end)
 
-  state.listing.pagination.subscribe(function(state)
+  state.listing.pagination:subscribe(function(state)
     page_counter.text = string.format("page: %d/%d", state.listing.pagination.current, state.listing.pagination.total)
   end)
 
   footer:setPosition(1, 1, prev)
-  footer:setPosition(2, 1, prev)
+  footer:setPosition(2, 1, page_counter)
   footer:setPosition(3, 1, nxt)
 
   return footer
