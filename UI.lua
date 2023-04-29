@@ -1,4 +1,6 @@
 local make_state = require "lib.state"
+local keeperlib = request "lib.keeperlib"
+local dblib = request "lib.fl"
 local bind_reducers = require "reducers"
 
 local state = bind_reducers(make_state({
@@ -64,6 +66,11 @@ local state = bind_reducers(make_state({
   }
 }))
 
+keeper = keeper.Keeper(dblib.DB("stock.db"), component.me_controller, keeperlib.IM(component.inventory_controller, sides.up, 1))
+
+
+state.add_blackbox("keeper", keeper)
+
 local workspace = GUI.workspace()
 
 workspace:addChild(GUI.panel(1, 1, workspace.width, workspace.height, state.cs.main.bg))
@@ -74,7 +81,6 @@ local body = require("body")(state, workspace)
 state:update_all()
 
 --------------------------------------------------------------------------------
-
 
 -- Draw workspace content once on screen when program starts
 workspace:draw()

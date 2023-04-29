@@ -49,6 +49,7 @@ function main()
   screen.setGPUAddress(component.gpu.address)
 
   -- Startup
+  sides = require("sides")
   require("UI")
 end
 

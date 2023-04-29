@@ -10,6 +10,16 @@ local function get_hidden_fields(state)
 end
 
 
+function RootStateIndex.add_blackbox(state, key, blackbox)
+  get_hidden_fields(state).blackboxes[key] = blackbox
+end
+
+
+function RootStateIndex.get_blackbox(state, key)
+  return get_hidden_fields(state).blackboxes[key]
+end
+
+
 function RootStateIndex.add_reducer(state, tp, reducer)
   get_hidden_fields(state).reducers[tp] = reducer
 end
@@ -43,11 +53,14 @@ local function set_reducer(state, data)
 end
 
 
-local function multiset_reducer(state, data)
+local function multi_reducer(state, events)
   local callbacks = {}
-  for idx, entry in pairs(data) do
-    for idx, callback in ipairs(set_reducer(state, entry)) do
-      table.insert(callbacks, callback)
+  for idx, entry in pairs(events) do
+    local reducer = get_hidden_fields(state).reducers[entry.type]
+    if reducer ~= nil then
+      for idx, callback in ipairs(reducer(state, entry.data)) do
+        table.insert(callbacks, callback)
+      end
     end
   end
   return callbacks
@@ -90,9 +103,10 @@ local function create_empty_state(parent)
 
   if parent == nil then
     state_hidden_fields.root_parent = state
+    state_hidden_fields.blackboxes = {}
     state_hidden_fields.reducers = { 
       SET = set_reducer,
-      MULTISET = multiset_reducer,
+      MULTI = multi_reducer,
     }   
     index = RootStateIndex
   else 

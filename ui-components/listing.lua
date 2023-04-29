@@ -57,7 +57,16 @@ return function(state, parent)
   state.sz.listing:subscribe(function(state) 
     layout._private.col_c = state.sz.listing.columns
     layout._private.row_h = state.sz.listing.row_h
+    
+    state:dispatch("MULTI", {
+      {type="LOAD_PAGE", data={page=state.listing.pagination.current, size=#layout.children}},
+      {type="SET_PAGE", data=1},
+    })
     layout.update()
+  end)
+
+  state.listing.pagination:subscribe(function(state)
+    state:dispatch("LOAD_PAGE", {page=state.listing.pagination.current, size=#layout.children})
   end)
 
 

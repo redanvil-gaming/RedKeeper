@@ -66,6 +66,33 @@ function Keeper_obj:format_list(c, page, filter)
 end
 
 
+function Keeper_obj:get_page(page, size, filter)
+  page = page
+  filter = filter or {}
+  local offset = (page - 1) * size
+  local results = {}
+  for item in self.db:iter_items() do
+    if offset == 0 and size > 0 then
+      local stock = self:item_stock(item)
+      local status = self:item_status(item)
+      if check_filter_match(item, status, stock, filter) then
+        table.insert(results, {
+          name=item.display_name,
+          required=item.required_amount,
+          tier=item.tier,
+          status=status,
+          stock=stock,
+        })
+      end
+      size = size - 1
+    else
+      offset = offset - 1
+    end
+  end
+  return results
+end
+
+
 function Keeper_obj:item_status(item)
   if self._tasks[item.id] ~= nil then
     return "c"
