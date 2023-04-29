@@ -1,14 +1,13 @@
 
 return function(parent, y, sz, cs)
   local body = parent:addChild(GUI.layout(
-    1, y, parent.widht, parent.height,
+    1, y, parent.width, parent.height,
     1, 2
   ))
 
-  header = require("header")(body, prefs)
-  listing = require("listing")(body)
+  local header = require("header")(body, cs.header)
+  local listing = require("listing")(body)
   
-
   body:setRowHeight(1, GUI.SIZE_POLICY_ABSOLUTE, sz.header.h)
   body:setRowHeight(2, GUI.SIZE_POLICY_ABSOLUTE, body.height - sz.header.h)
 

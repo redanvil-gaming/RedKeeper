@@ -1,15 +1,3 @@
-local component = require("component")
-local GUI = require("GUI")
-local screen = require("Screen")
-local color = require("Color")
-local bigLetter = require("BigLetters")
-screen.setGPUAddress(component.gpu.address)
-
-package.path = string.format("./ui-components/?.lua;%s", package.path)
-
-
---------------------------------------------------------------------------------
-
 local cs = {
   bg = 0x262626,
   menu = {
@@ -63,7 +51,7 @@ cs_menu:addItem("Alter sizes")
 cs_menu:addItem("Delete sizes")
 
 
-local body = require "ui-components.body"(workspace, sz.menu, sz, cs)
+local body = require("body")(workspace, sz.menu, sz, cs)
 
 --------------------------------------------------------------------------------
 

@@ -1,6 +1,7 @@
-local thispath = select("1", ...):match(".+%.") or ""
+local thispath = select("1", ...)
 
 package.path = string.format("./%s/?.lua;%s", thispath, package.path)
+package.path = string.format("./%s/ui-components/?.lua;%s", thispath, package.path)
 
 thread = require("thread")
 
