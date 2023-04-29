@@ -29,6 +29,7 @@ function main()
   computer = require("computer")
   component = require("component")
   unicode = require("unicode")
+  filesystem = require("filesystem")
 
   -- Filesystem
   Filesystem = require("Filesystem")
