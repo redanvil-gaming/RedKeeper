@@ -10,10 +10,6 @@ local cs = {
     header = {
       bg = 0x363636,
       fg = 0x0,
-      abg = 0x363636,
-      afg = 0xFF0000,
-      sbg = 0x464646,
-      sfg = 0x0000FF,
     },
   }
 }

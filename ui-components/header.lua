@@ -9,5 +9,11 @@ return function(parent, cs)
   header:setPosition(3, 1, header:addChild(GUI.text(1, 1, cs.fg, "S/C/W/A: 2/5/3/10")))
   header:setPosition(4, 1, header:addChild(GUI.text(1, 1, cs.fg, "Running: V")))
   
+  local old_draw = header.draw
+  header.draw = function(header)
+    screen.drawRectangle(header.x, header.y, header.width, header.height, cs.bg, cs.fg, " ")
+    old_draw(header)
+  end
+
   return header
 end
