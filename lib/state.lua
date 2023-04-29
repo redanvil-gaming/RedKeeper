@@ -55,7 +55,7 @@ local function update_all(state)
   end
 
   for k, v in pairs(state) do
-    if v.update_all ~= nil then
+    if type(v) == "table" and v.update_all ~= nil then
       v:update_all()
     end
   end
