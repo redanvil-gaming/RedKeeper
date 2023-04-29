@@ -1,6 +1,4 @@
 return function(state, parent, cs)
-  
-
   local header = parent:addChild(GUI.layout(
     1, 1, parent.width, 1,
     4, 1

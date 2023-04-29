@@ -5,8 +5,8 @@ return function(state, parent, y, sz, cs)
     1, 2
   ))
 
-  local header = require("header")(body, cs.header)
-  local listing = require("listing")(body)
+  local header = require("header")(state, body, cs.header)
+  local listing = require("listing")(state, body)
   
   body:setRowHeight(1, GUI.SIZE_POLICY_ABSOLUTE, sz.header.h)
   body:setRowHeight(2, GUI.SIZE_POLICY_ABSOLUTE, body.height - sz.header.h)
@@ -19,6 +19,6 @@ return function(state, parent, y, sz, cs)
   body.update = function()
     header.update()
   end
-  
+
   return body
 end
