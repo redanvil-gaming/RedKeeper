@@ -20,22 +20,22 @@ return function(state, parent, cs)
   end
 
   state.tier:subscribe(
-    function()
+    function(state)
       tier_label.text = string.format("Tier: %d/%d", state.tier.current, state.tier.max)
     end
   )
   state.cpus:subscribe(
-    function()
+    function(state)
       cpus_label.text = string.format("CPUs: %d/%d", state.cpus.used, state.cpus.available)
     end
   )
   state.stats:subscribe(
-    function()
+    function(state)
       scwt_label.text = string.format("S/C/W/T: %d/%d/%d/%d", state.stats.stocked, state.stats.crafting, state.stats.waiting, state.stats.total)
     end
   )
-  state.health:subscribe
-    function()
+  state.health:subscribe(
+    function(state)
       running_label.text = string.format("Running: %s", tostring(state.health.running))
     end
   )
