@@ -109,9 +109,9 @@ return function(state, parent)
     state:dispatch("LOAD_PAGE", {page=state.listing.pagination.current, size=#layout.children})
   end)
 
-  state.listing.pagination.content:subscribe(function(state)
+  state.listing.content:subscribe(function(state)
     for idx, col in ipairs(layout.children) do
-      col:set_values(state.listing.pagination.content)
+      col:set_values(state.listing.content)
     end
   end)
 
