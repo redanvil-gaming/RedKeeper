@@ -26,7 +26,7 @@ local function redraw_columns(listing)
   end
   if #listing.children < row_c * col_c then
     for row=#listing.children + 1, row_c * col_c do
-      make_row(state, parent, row)
+      make_row(state, listing, row)
     end
   end
   for col=1, col_c do
