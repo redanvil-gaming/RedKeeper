@@ -36,25 +36,25 @@ menu:addItem("AE2 StockKeeper", 0x0)
 menu:addItem("Reboot").onTouch = function() os.execute("reboot") end
 menu:addItem("Pull").onTouch = function() filesystem.copy("current_branch", "branch") end
 menu:addItem("Set branch").onTouch = function()
-  -- local filename = "current_branch"
-  -- local file, err = io.open(filename, "r")
-  -- local current_branch = ""
-  -- if not (err ~= nil) then
-  --   current_branch = file:read()
-  --   file:close()
-  -- end
-
-	-- local container = GUI.addBackgroundContainer(workspace, true, true, "Change current git branch")
-  -- local input = GUI.input(1, 1, 30, 3, 0xEEEEEE, 0x555555, 0x999999, 0xFFFFFF, 0x2D2D2D, current_branch, "Enter branch name")
-  -- input.onInputFinished = function()
-  --   local file, err = io.open(filename, "r")
-  --   if not (err == nil) then
-  --     GUI.alert(string.format("Can not open file [%s] for write", filename))
-  --   end
-  --   file:write(input.text)
-  --   file:close()
-  -- end
+  local filename = "current_branch"
+  local file, err = io.open(filename, "r")
+  local current_branch = ""
+  if not (err ~= nil) then
+    current_branch = file:read()
+    file:close()
+  end
+	local container = GUI.addBackgroundContainer(workspace, true, true, "Change current git branch")
+  local input = GUI.input(1, 1, 30, 3, 0xEEEEEE, 0x555555, 0x999999, 0xFFFFFF, 0x2D2D2D, current_branch, "Enter branch name")
+  input.onInputFinished = function()
+    local file, err = io.open(filename, "r")
+    if not (err == nil) then
+      GUI.alert(string.format("Can not open file [%s] for write", filename))
+    end
+    file:write(input.text)
+    file:close()
+  end
 	container.layout:addChild(GUI.switchAndLabel(1, 1, 36, 8, 0x66DB80, 0x2D2D2D, 0xE1E1E1, 0x878787, "Flick me:", true))
+  workspace:draw()
 end
 
 
