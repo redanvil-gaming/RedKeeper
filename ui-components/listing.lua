@@ -13,7 +13,7 @@ return function(state, parent)
     1, 1
   ))
 
-  layout.redraw_coluns = function(listing, state)
+  layout.redraw_columns = function(listing, state)
     local col_c = state.sz.listing.columns
     local row_h = state.sz.listing.row_h
     local col_w = math.floor(listing.width / col_c)
@@ -40,5 +40,10 @@ return function(state, parent)
       end
     end
   end
+
+  state.sz.listing:subscribe(function(state) 
+    listing:redraw_columns(state)
+  end)
+
   return layout
 end
