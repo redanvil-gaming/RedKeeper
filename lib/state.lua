@@ -49,7 +49,9 @@ end
 
 
 function RootStateIndex.dispatch(state, tp, data)
-  for idx, callback in ipairs(do_reduce(state, tp, data)) do
+  local callbacks = do_reduce(state, tp, data)
+  if callbacks == nil then return end
+  for idx, callback in ipairs(callbacks) do
     callback(state)
   end
 end
