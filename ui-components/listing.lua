@@ -78,12 +78,11 @@ return function(state, parent)
   local old_update = layout.update
   layout.update = function()
     old_update(layout)
-    state:dispatch("SET_PAGE_SIZE", {cols=state.sz.listing.columns, rows=math.floor(layout.height / state.sz.listing.row_h)})
     redraw_columns(state, layout)
   end
 
   state.sz.listing:subscribe(function(state)  
-    layout:update()
+    state:dispatch("SET_PAGE_SIZE", {cols=state.sz.listing.columns, rows=math.floor(layout.height / state.sz.listing.row_h)})
   end)
 
   state.listing.pagination:subscribe(function(state)

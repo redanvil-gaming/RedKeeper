@@ -3,9 +3,11 @@ return function(state, parent)
 
   menu:addItem("AE2 StockKeeper", 0x0)
 
-  menu:addItem("Reboot").onTouch = function() os.execute("reboot") end
+  local system_menu = menu:addContextMenuItem("System")
 
-  menu:addItem("Pull").onTouch = function() 
+  system_menu:addItem("Reboot").onTouch = function() os.execute("reboot") end
+
+  system_menu:addItem("Pull").onTouch = function() 
     local file, err = io.open("current_branch", "r")
     local current_branch = ""
     if not (err ~= nil) then
@@ -25,7 +27,7 @@ return function(state, parent)
     GUI.alert("Requested, pull usually takes ~10 sec. Please wait and reboot.")
   end
 
-  menu:addItem("Set branch").onTouch = function()
+  system_menu:addItem("Set branch").onTouch = function()
     local filename = "current_branch"
     local file, err = io.open(filename, "r")
     local current_branch = ""
@@ -47,13 +49,23 @@ return function(state, parent)
     parent:draw()
   end
 
-  menu:addItem("Lua").onTouch = function() 
+  system_menu:addItem("Lua").onTouch = function() 
     menu.firstParent:stop()
     screen.clear()
     screen.update()
     os.execute("lua")
     menu.firstParent:draw()
     menu.firstParent:start()
+  end
+
+  system_menu:addItem("Toggle log").onTouch = function()
+    state:dispatch("TOGGLE_LOG")
+  end
+
+  system_menu:addItem("Show log").onTouch = function()
+    local container = GUI.addBackgroundContainer(parent, true, true, "Change current git branch")
+    container:addChild(GUI.textBox(1, 1, 60, container.height, 0xFFFFFF, 0, state:logs(), 1, 1, 0))
+    parent:draw()
   end
 
 

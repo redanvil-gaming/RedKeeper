@@ -1,3 +1,5 @@
+local serialization = require("serialization")
+
 local make_state
 
 
@@ -28,6 +30,9 @@ end
 
 function RootStateIndex.dispatch(state, tp, data)
   while type(tp) == "string" do
+    if get_hidden_fields(state).logging then
+      table.insert(get_hidden_fields(state).log, string.format("%s\t%s", tp, serialization.serialize(data)))
+    end
     local reducer = get_hidden_fields(state).reducers[tp]
     if reducer == nil then
       return
@@ -54,6 +59,21 @@ local function set_reducer(state, data)
     end
   end
   return callbacks
+end
+
+
+local function toggle_log_reducer(state, data)
+  get_hidden_fields(state).logging = not get_hidden_fields(state).logging
+end
+
+
+local function clear_log_reducer(state, data)
+  get_hidden_fields(state).log = {}
+end
+
+
+function RootStateIndex.logs(state)
+  return get_hidden_fields(state).log
 end
 
 
@@ -114,7 +134,11 @@ local function create_empty_state(parent, hidden_fields)
     state_hidden_fields.reducers = { 
       SET = set_reducer,
       MULTI = multi_reducer,
-    }   
+      TOGGLE_LOG = toggle_log_reducer,
+      CLEAR_LOG = clear_log_reducer,
+    }
+    state_hidden_fields.log = {}
+    state_hidden_fields.logging = true
     index = RootStateIndex
   else 
     state_hidden_fields.root_parent = get_hidden_fields(parent).root_parent
