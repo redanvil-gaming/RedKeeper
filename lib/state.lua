@@ -31,7 +31,7 @@ end
 function RootStateIndex.dispatch(state, tp, data)
   while type(tp) == "string" do
     if get_hidden_fields(state).logging then
-      table.insert(get_hidden_fields(state).log, string.format("%s\t%s", tp, serialization.serialize(data)))
+      table.insert(get_hidden_fields(state).log, string.format("%s: %s", tp, serialization.serialize(data)))
     end
     local reducer = get_hidden_fields(state).reducers[tp]
     if reducer == nil then

@@ -64,7 +64,7 @@ return function(state, parent)
 
   system_menu:addItem("Show log").onTouch = function()
     local container = GUI.addBackgroundContainer(parent, true, true, "Change current git branch")
-    container:addChild(GUI.textBox(1, 1, 60, container.height, 0xFFFFFF, 0, state:logs(), 1, 1, 0))
+    container:addChild(GUI.textBox(1, 1, 100, container.height, 0xFFFFFF, 0, state:logs(), 1, 1, 0))
     parent:draw()
   end
 
