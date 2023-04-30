@@ -104,8 +104,11 @@ local function keeper_scrabber()
     if state.system.running then
       keeper:refresh()
       state:dispatch("LOAD_PAGE")
+      state:dispatch("SET", {path={"cpus"}, keeper:get_cpu_stats()})
+      state:dispatch("SET", {path={"stats"}, keeper:get_general_stats()})
       if iter == state.system.craft_every then
-        keeper:crafting_iter()
+        local tiers = keeper:crafting_iter()
+        state:dispatch("SET", {path={"tiers"}, tiers})
         iter = 1
       end
       iter = iter + 1
