@@ -26,6 +26,11 @@ local function redraw_rows(state, column)
   if #column.children > row_c * field_c then
     column:removeChildren(row_c + 1, #column.children)
   end
+  while #column.children < row_c * field_c then
+    for f=1, field_c do
+      column:setPosition(1, r, column:addChild(GUI.text(1, 1, state.cs.listing.fg, "")))
+    end
+  end
 end
 
 local function set_column_values(state, column)
@@ -36,12 +41,12 @@ local function set_column_values(state, column)
     if item == nil then
       break
     end
-    column:setPosition(1, r, column:addChild(GUI.text(1, 1, 0, string.format("T: %s", item.tier))))
-    column:setPosition(2, r, column:addChild(GUI.text(1, 1, 0, tostring(item.status))))
-    column:setPosition(3, r, column:addChild(GUI.text(1, 1, 0, item.display_name)))
-    column:setPosition(4, r, column:addChild(GUI.text(1, 1, 0, tostring(item.stock))))
-    column:setPosition(5, r, column:addChild(GUI.text(1, 1, 0, "/")))
-    column:setPosition(6, r, column:addChild(GUI.text(1, 1, 0, tostring(item.required))))
+    column.children[#column.columnSizes * (r - 1) + 1].text = string.format("T: %s", item.tier)
+    column.children[#column.columnSizes * (r - 1) + 2].text = tostring(item.status)
+    column.children[#column.columnSizes * (r - 1) + 3].text = item.display_name
+    column.children[#column.columnSizes * (r - 1) + 4].text = tostring(item.stock)
+    column.children[#column.columnSizes * (r - 1) + 5].text = "/"
+    column.children[#column.columnSizes * (r - 1) + 6].text = tostring(item.required)
   end
 end
 
