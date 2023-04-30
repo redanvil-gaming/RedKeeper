@@ -47,7 +47,11 @@ return function(state, parent)
     parent:draw()
   end
 
-  menu:addItem("Lua").onTouch = function() os.execute("lua") end
+  menu:addItem("Lua").onTouch = function() 
+    os.execute("clear")
+    os.execute("lua")
+    menu.firtParent:draw()
+  end
 
 
   local cs_menu = menu:addContextMenuItem("Preferences")

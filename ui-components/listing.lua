@@ -1,8 +1,6 @@
 local function redraw_rows(column, state)
   local row_h = state.sz.listing.row_h
-  local row_c = math.floor(layout.height / row_h)
-
-  layout.set_values = function(layout, items)
+  local row_c = math.floor(column.height / row_h)
 
   column:setGridSize(column._field_c, row_c)
   for r=1, row_c do
@@ -14,18 +12,20 @@ local function redraw_rows(column, state)
   end
 end
 
-local function set_column_values(layout, state)
-  for r=1, layout._row_c do
-    local item = items[(layout._col - 1) * layout._row_c + r]
+local function set_column_values(column, state)
+  local row_h = state.sz.listing.row_h
+  local row_c = math.floor(column.height / row_h)
+  for r=1, row_c do
+    local item = state.listing.content[(column._col - 1) * row_c + r]
     if item == nil then
       break
     end
-    layout:setPosition(1, r, layout:addChild(GUI.text(1, 1, 0, string.format("T: %s", item.tier))))
-    layout:setPosition(2, r, layout:addChild(GUI.text(1, 1, 0, tostring(item.status))))
-    layout:setPosition(3, r, layout:addChild(GUI.text(1, 1, 0, item.display_name)))
-    layout:setPosition(4, r, layout:addChild(GUI.text(1, 1, 0, tostring(item.stock))))
-    layout:setPosition(5, r, layout:addChild(GUI.text(1, 1, 0, "/")))
-    layout:setPosition(6, r, layout:addChild(GUI.text(1, 1, 0, tostring(item.required))))
+    column:setPosition(1, r, column:addChild(GUI.text(1, 1, 0, string.format("T: %s", item.tier))))
+    column:setPosition(2, r, column:addChild(GUI.text(1, 1, 0, tostring(item.status))))
+    column:setPosition(3, r, column:addChild(GUI.text(1, 1, 0, item.display_name)))
+    column:setPosition(4, r, column:addChild(GUI.text(1, 1, 0, tostring(item.stock))))
+    column:setPosition(5, r, column:addChild(GUI.text(1, 1, 0, "/")))
+    column:setPosition(6, r, column:addChild(GUI.text(1, 1, 0, tostring(item.required))))
   end
 end
 
@@ -65,7 +65,6 @@ local function redraw_columns(state, listing)
     end
   end
   for col=1, col_c do
-    listing.children[col]:set_row_h(listing._private.row_h)
     listing:setPosition(col, 1, listing.children[col])
     listing:setFitting(col, 1, true, true)
   end
@@ -83,10 +82,7 @@ return function(state, parent)
     old_update(layout)
   end
 
-  state.sz.listing:subscribe(function(state) 
-    layout._private.col_c = state.sz.listing.columns
-    layout._private.row_h = state.sz.listing.row_h
-    
+  state.sz.listing:subscribe(function(state)  
     state:dispatch("MULTI", {
       {type="LOAD_PAGE", data={page=state.listing.pagination.current, size=#layout.children}},
       {type="SET_PAGE", data=1},
