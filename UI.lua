@@ -13,6 +13,12 @@ state = bind_reducers(make_state({
     listing = {
       columns = 2,
       row_h = 3,
+      fields = {
+        tier = 4,
+        state = 3,
+        stock = 12,
+        required = 12,
+      },
     }
   },
   cs = {
@@ -56,12 +62,6 @@ state = bind_reducers(make_state({
   },
   listing = {
     content = {},
-    fields = {
-      tier = 4,
-      state = 3,
-      stock = 12,
-      required = 12,
-    },
     pagination = {
       current = 1,
       row_c = 1,
