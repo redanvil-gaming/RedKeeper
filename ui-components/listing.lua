@@ -77,16 +77,19 @@ return function(state, parent)
 
   local old_update = layout.update
   layout.update = function()
-    redraw_columns(state, layout)
     old_update(layout)
+    local sizes = data={cols=state.sz.listing.columns, rows=math.floor(layout.height / state.sz.listing.row_h)}
+    if state.listing.pagination.size ~= sizes.cols * sizes.rows or state.listing.pagination.row_c ~= sizes.rows then
+      state:dispatch("MULTI", {
+        {type="SET_PAGE_SIZE", },
+        {type="SET_PAGE", data=1},
+      })
+    end
+    redraw_columns(state, layout)
   end
 
   state.sz.listing:subscribe(function(state)  
-    state:dispatch("MULTI", {
-      {type="SET_PAGE_SIZE", data={cols=state.sz.listing.columns, rows=math.floor(layout.height / state.sz.listing.row_h)}},
-      {type="SET_PAGE", data=1},
-    })
-    layout.update()
+    layout:update()
   end)
 
   state.listing.pagination:subscribe(function(state)
