@@ -65,6 +65,11 @@ local function set_reducer(state, data)
       table.insert(callbacks, callback)
     end
     if idx == #data.path then
+      if type(current[token]) == "table" then
+        for i, callback in pairs(get_hidden_fields(current[token]).subscriptions) do
+          table.insert(callbacks, callback)
+        end
+      end
       current[token] = make_state(data.value, current, get_hidden_fields(current[token]))
     else
       current = current[token]
