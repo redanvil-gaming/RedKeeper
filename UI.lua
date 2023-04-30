@@ -79,7 +79,7 @@ state = bind_reducers(make_state({
   },
 }))
 
-keeper = keeperlib.Keeper:new(dblib.DB:new("stock.db"), component.me_controller, keeperlib.IM:new(component.inventory_controller, sides.up, 1))
+keeper = keeperlib.Keeper:new(dblib.DB:new("stock.db"), component.me_controller, keeperlib.IM:new(component.inventory_controller, sides.up, 1), "~auto")
 
 state:add_blackbox("keeper", keeper)
 
