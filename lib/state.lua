@@ -104,7 +104,9 @@ end
 
 
 local function state_subscribe(state, callback)
-  local key = "s"..#get_hidden_fields(state).subscriptions
+  local sz = 0
+  for _, _ in pairs(get_hidden_fields(state).subscriptions) do sz = sz + 1 end
+  local key = "s"..sz
   get_hidden_fields(state).subscriptions[key] = callback
   return function()
     state[key] = nil
