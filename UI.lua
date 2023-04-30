@@ -100,6 +100,9 @@ local body = require("body")(state, workspace)
 state:update_all()
 workspace:draw()
 
+-- extremely dirty hack to reset all values on resize, TODO (@rebenkoy): there must be a `clever` way to do this
+state:dispatch("SET", {path = {"sz", "listing", "row_h"}, value = state.sz.listing.row_h})
+
 -- Start processing events for workspace
 
 local function keeper_scrabber()
@@ -110,7 +113,7 @@ local function keeper_scrabber()
       state:dispatch("LOAD_PAGE")
       state:dispatch("SET", {path={"cpus"}, value=keeper:get_cpu_stats()})
       state:dispatch("SET", {path={"stats"}, value=keeper:get_general_stats()})
-      state:dispatch("SET", {path={"tiers"}, value=keeper:get_tier_stats()})
+      state:dispatch("SET", {path={"tier"}, value=keeper:get_tier_stats()})
       if iter == state.system.craft_every then
         keeper:crafting_iter()
         iter = 1

@@ -182,6 +182,10 @@ end
 function Keeper_obj:start_crafts()
   local last_requested_tier = 0
   local max_tier = 0
+  self._tier_stats = {
+    current = 0,
+    max_tier = 0,
+  }
   self._stats = {
     stocked = 0,
     crafting = 0,
@@ -195,15 +199,16 @@ function Keeper_obj:start_crafts()
   for item in self.db:iter_items() do
     self._stats.total = self._stats.total + 1
     if stop then
-      max_tier = item.tier
+      self._tier_stats.max = item.tier
       self._stats.waiting = self._stats.waiting + 1
     else
-      if last_requested_tier ~= 0 and last_requested_tier ~= item.tier then
+      if self._tier_stats.current ~= 0 and self._tier_stats.current ~= item.tier then
         stop = true
       end
       local status = self:item_status(item)
       if status == 'c' then
         self._stats.crafting = self._stats.crafting + 1
+        self._tier_stats.current = item.tier
       end
       if status == '+' then
         self._stats.stocked = self._stats.stocked + 1
@@ -218,12 +223,11 @@ function Keeper_obj:start_crafts()
             stop = true
           end
           craftable.request(item.required_amount - self:item_stock(item), true, self._cpus[attempting_cpu].name)
-          last_requested_tier = item.tier
+          self._tier_stats.current = item.tier
         end
       end
     end
   end
-  self._tier_stats = {current=last_requested_tier, max=max_tier}
 end
 
 
