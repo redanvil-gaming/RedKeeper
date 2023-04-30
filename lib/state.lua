@@ -28,7 +28,7 @@ function RootStateIndex.add_reducer(state, tp, reducer)
 end
 
 
-function RootStateIndex.dispatch(state, tp, data)
+local function do_reduce(state, tp, data)
   while type(tp) == "string" do
     if get_hidden_fields(state).logging then
       table.insert(get_hidden_fields(state).log, string.format("%s: %s", tp, serialization.serialize(data)))
@@ -39,7 +39,12 @@ function RootStateIndex.dispatch(state, tp, data)
     end 
     tp, data = reducer(state, data)
   end
-  for idx, callback in ipairs(tp) do
+  return tp
+end
+
+
+function RootStateIndex.dispatch(state, tp, data)
+  for idx, callback in ipairs(do_reduce(state, tp, data)) do
     callback(state)
   end
 end
@@ -79,12 +84,9 @@ end
 
 local function multi_reducer(state, events)
   local callbacks = {}
-  for idx, entry in pairs(events) do
-    local reducer = get_hidden_fields(state).reducers[entry.type]
-    if reducer ~= nil then
-      for idx, callback in ipairs(reducer(state, entry.data)) do
-        table.insert(callbacks, callback)
-      end
+  for idx, entry in pairs(events) do    
+    for idx, callback in ipairs(do_reduce(state, entry.type, entry.data)) do
+      table.insert(callbacks, callback)
     end
   end
   return callbacks
