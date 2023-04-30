@@ -36,6 +36,13 @@ local function listing_column(state, parent, col)
 
   layout._field_c = 6
   layout._col = col
+
+  local old_update = layout.update
+  layout.update = function()
+    state:dispatch(string.format("COLUMN_%d_UPDATE", layout._col))
+    old_update()
+  end
+
   return layout
 end
 
@@ -74,6 +81,12 @@ return function(state, parent)
   state.listing.pagination:subscribe(function(state)
     state:dispatch("LOAD_PAGE")
   end)
+
+  local old_update = layout.update
+  layout.update = function()
+    state:dispatch("LISTING_UPDATE")
+    old_update()
+  end
 
   return layout
 end
