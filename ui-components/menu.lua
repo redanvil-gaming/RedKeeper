@@ -1,3 +1,5 @@
+local serialization = require("serialization")
+
 return function(state, parent)
   local menu = parent:addChild(GUI.menu(1, 1, parent.width, state.cs.menu.bg, state.cs.menu.fg, state.cs.menu.pbg, state.cs.menu.pfg))
 
@@ -65,6 +67,17 @@ return function(state, parent)
   system_menu:addItem("Show log").onTouch = function()
     local container = GUI.addBackgroundContainer(parent, true, true, "Change current git branch")
     container:addChild(GUI.textBox(1, 1, 100, container.height, 0xFFFFFF, 0, state:logs(), 1, 1, 0))
+    parent:draw()
+  end
+
+
+  system_menu:addItem("Show state").onTouch = function()
+    local container = GUI.addBackgroundContainer(parent, true, true, "Change current git branch")
+    rows = {}
+    for str in string.gmatch(serialization.serialize(state, true), "([^\n"]+)")do
+      table.insert(rows, str)
+    end
+    container:addChild(GUI.textBox(1, 1, 100, container.height, 0xFFFFFF, 0, rows, 1, 1, 0))
     parent:draw()
   end
 

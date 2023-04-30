@@ -42,7 +42,7 @@ local function do_reduce(state, tp, data)
     level = level + 1
   end
   if get_hidden_fields(state).logging then
-    table.insert(get_hidden_fields(state).log, string.format("%d| callbacks: %d", level, #tp))
+    table.insert(get_hidden_fields(state).log, string.format("callbacks: %d", #tp))
   end
   return tp
 end

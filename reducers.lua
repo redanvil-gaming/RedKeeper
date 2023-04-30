@@ -8,7 +8,7 @@ function reducers.set_page_size(state, data)
   if state.listing.pagination.size ~= data.cols * data.rows then
     table.insert(setters, {type="SET", data={path = {"listing", "pagination", "size"}, value = data.cols * data.rows}})
   end
-  if #setters then
+  if #setters > 0 then
     table.insert(setters, {type="SET_PAGE", data=1})
     return "MULTI", setters
   end
