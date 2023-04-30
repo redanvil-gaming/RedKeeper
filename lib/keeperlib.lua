@@ -32,10 +32,13 @@ function Keeper:new(db, me, im, cpu_filter)
       crafting = 0,
       waiting = 0,
       total = 0,
+    }, _tier_stats = {
+      current = 0,
+      max = 0,
     }},
     { __index = function(t, k) return rawget(Keeper_obj, k) end}
   )
-  keeper = strictness.strict(keeper, "db", "me", "im", "cpu_filter", "_tasks", "_cpus", "_stats")
+  keeper = strictness.strict(keeper, "db", "me", "im", "cpu_filter", "_tasks", "_cpus", "_stats", "_tier_stats")
   keeper:refresh()
   return keeper
 end
@@ -113,6 +116,10 @@ end
 
 function Keeper_obj:get_general_stats()
   return self._stats
+end
+
+function Keeper_obj:get_tier_stats()
+  return self._tier_stats
 end
 
 
@@ -216,7 +223,7 @@ function Keeper_obj:start_crafts()
       end
     end
   end
-  return {current=last_requested_tier, max=max_tier}
+  self._tier_stats = {current=last_requested_tier, max=max_tier}
 end
 
 
