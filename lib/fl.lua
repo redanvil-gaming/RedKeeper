@@ -2,7 +2,7 @@ local fs = require("filesystem")
 local serialization = require("serialization")
 local base64 = require("base64")
 local strictness = require("strictness")
-local tablefunc = require("tablefunc")
+local tablefunc = require "lib.tablefunc"
 
 -- local funcDoc = function(func, string) -- not sure if its a good idea
 --   func = tablefunc(func, string)
@@ -399,26 +399,30 @@ local function items_iterator(state, idx)
   local tier = idx.tier
   local id = idx.id
   if tier == nil then
-    tier, _ = next(state, nil)
+    _, tier = next(state.tiers, nil)
   end
   if tier == nil then
     return nil
   end
-  id, _ = next(state[tier], id)
+  id, _ = next(state.items[tier], id)
   while id == nil do
-    tier, _ = next(state, tier)
+    _, tier = next(state.tiers, tier)
     if tier == nil then
       return nil
     end
-    id, _ = next(state[tier], nil)
+    id, _ = next(state.items[tier], nil)
   end
 
-  return state[tier][id]
+  return state.items[tier][id]
 end
 
 function DB_obj:iter_items()
-  table.sort(self._items)
-  return items_iterator, self._items, { tier = nil, id = nil }
+  local keys = {}
+  for k, v in pairs(self._items) do
+    table.insert(keys, k)
+  end
+  table.sort(keys)
+  return items_iterator, { items = self._items, tiers = keys }, { tier = nil, id = nil }
 end
 DB_obj.iter_items = tablefunc.funcWrapper(DB_obj.iter_items,
 [[bound function DB_obj:iter_items()

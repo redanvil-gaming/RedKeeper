@@ -27,10 +27,18 @@ L.Keeper = Keeper
 
 function Keeper:new(db, me, im, cpu_filter)
   local keeper = setmetatable(
-    {db = db, me = me, im = im, cpu_filter = cpu_filter},
+    {db = db, me = me, im = im, cpu_filter = cpu_filter, _stats = {
+      stocked = 0,
+      crafting = 0,
+      waiting = 0,
+      total = 0,
+    }, _tier_stats = {
+      current = 0,
+      max = 0,
+    }},
     { __index = function(t, k) return rawget(Keeper_obj, k) end}
   )
-  keeper = strictness.strict(keeper, "db", "me", "im", "cpu_filter", "_tasks", "_cpus")
+  keeper = strictness.strict(keeper, "db", "me", "im", "cpu_filter", "_tasks", "_cpus", "_stats", "_tier_stats")
   keeper:refresh()
   return keeper
 end
@@ -63,6 +71,55 @@ function Keeper_obj:format_list(c, page, filter)
     end
   end
   return results
+end
+
+
+function Keeper_obj:get_page(page, size, filter)
+  filter = filter or {}
+  local offset = (page - 1) * size
+  local results = {}
+  for item in self.db:iter_items() do
+    if size == 0 then return results end
+    if offset == 0 and size > 0 then
+      local stock = self:item_stock(item)
+      local status = self:item_status(item)
+      if check_filter_match(item, status, stock, filter) then
+        table.insert(results, {
+          display_name=item.display_name,
+          required=item.required_amount,
+          tier=item.tier,
+          status=status,
+          stock=stock,
+        })
+      end
+      size = size - 1
+    else
+      offset = offset - 1
+    end
+  end
+  return results
+end
+
+
+function Keeper_obj:get_cpu_stats()
+  local available = 0
+  local used = 0
+  for k, cpu in pairs(self._cpus) do
+    available = available + 1
+    if cpu.busy then
+      used = used + 1
+    end
+  end
+  return {available=available, used=used}
+end
+
+
+function Keeper_obj:get_general_stats()
+  return self._stats
+end
+
+function Keeper_obj:get_tier_stats()
+  return self._tier_stats
 end
 
 
@@ -124,21 +181,51 @@ end
 
 function Keeper_obj:start_crafts()
   local last_requested_tier = 0
+  local max_tier = 0
+  self._tier_stats = {
+    current = 0,
+    max_tier = 0,
+  }
+  self._stats = {
+    stocked = 0,
+    crafting = 0,
+    waiting = 0,
+    total = 0,
+  }
+
+  local stop = false
   local attempting_cpu = next(self._cpus, nil)
+
   for item in self.db:iter_items() do
-    if last_requested_tier ~= 0 and last_requested_tier ~= item.tier then
-      return
-    end
-    if self:item_status(item) == '-' then
-      local craftable = self.me.getCraftables(item.spec)[1]
-      while attempting_cpu ~= nil and self._cpus[attempting_cpu].busy do
-        attempting_cpu = next(self._cpus, attempting_cpu)
+    self._stats.total = self._stats.total + 1
+    if stop then
+      self._tier_stats.max = item.tier
+      self._stats.waiting = self._stats.waiting + 1
+    else
+      if self._tier_stats.current ~= 0 and self._tier_stats.current ~= item.tier then
+        stop = true
       end
-      if attempting_cpu == nil then
-        return
+      local status = self:item_status(item)
+      if status == 'c' then
+        self._stats.crafting = self._stats.crafting + 1
+        self._tier_stats.current = item.tier
       end
-      craftable.request(item.required_amount - self:item_stock(item), true, self._cpus[attempting_cpu].name)
-      last_requested_tier = item.tier
+      if status == '+' then
+        self._stats.stocked = self._stats.stocked + 1
+      end
+      if status == '-' then
+        local craftable = self.me.getCraftables(item.spec)[1]
+        if craftable ~= nil then
+          while attempting_cpu ~= nil and self._cpus[attempting_cpu].busy do
+            attempting_cpu = next(self._cpus, attempting_cpu)
+          end
+          if attempting_cpu == nil then
+            stop = true
+          end
+          craftable.request(item.required_amount - self:item_stock(item), true, self._cpus[attempting_cpu].name)
+          self._tier_stats.current = item.tier
+        end
+      end
     end
   end
 end

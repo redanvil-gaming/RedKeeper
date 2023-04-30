@@ -29,7 +29,7 @@ local function funcWrapper(func, docStr) -- function func , string docStr
     setmetatable(tab, {
         __call = newFunc,
         __doc = docStr,
-        __tostring = tableFunctionToString
+        __tostring = tableFunctionToString,
         __type = 'tablefunc'
     })
     return tab
@@ -40,10 +40,10 @@ end
 local function extendedType(var)
     mt = getmetatable(var)
     if (not mt) then 
-        retrun type(var)
+        return type(var)
     end
     if (not mt.__type) then 
-        retrun type(var)
+        return type(var)
     end
     return mt.__type
 end

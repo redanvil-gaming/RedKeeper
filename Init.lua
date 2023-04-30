@@ -1,6 +1,7 @@
-local thispath = select("1", ...):match(".+%.") or ""
+local thispath = select("1", ...)
 
 package.path = string.format("./%s/?.lua;%s", thispath, package.path)
+package.path = string.format("./%s/ui-components/?.lua;%s", thispath, package.path)
 
 thread = require("thread")
 
@@ -28,6 +29,7 @@ function main()
   computer = require("computer")
   component = require("component")
   unicode = require("unicode")
+  filesystem = require("filesystem")
 
   -- Filesystem
   Filesystem = require("Filesystem")
@@ -47,6 +49,7 @@ function main()
   screen.setGPUAddress(component.gpu.address)
 
   -- Startup
+  sides = require("sides")
   require("UI")
 end
 
