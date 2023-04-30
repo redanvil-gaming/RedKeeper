@@ -78,13 +78,7 @@ return function(state, parent)
   local old_update = layout.update
   layout.update = function()
     old_update(layout)
-    local sizes = data={cols=state.sz.listing.columns, rows=math.floor(layout.height / state.sz.listing.row_h)}
-    if state.listing.pagination.size ~= sizes.cols * sizes.rows or state.listing.pagination.row_c ~= sizes.rows then
-      state:dispatch("MULTI", {
-        {type="SET_PAGE_SIZE", },
-        {type="SET_PAGE", data=1},
-      })
-    end
+    state:dispatch("SET_PAGE_SIZE", {cols=state.sz.listing.columns, rows=math.floor(layout.height / state.sz.listing.row_h)})
     redraw_columns(state, layout)
   end
 
