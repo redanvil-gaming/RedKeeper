@@ -79,7 +79,11 @@ state = bind_reducers(make_state({
   },
 }))
 
-keeper = keeperlib.Keeper:new(dblib.DB:new("stock.db"), component.me_controller, keeperlib.IM:new(component.inventory_controller, sides.up, 1), "~auto")
+keeper = keeperlib.Keeper:new(
+  dblib.DB:new("stock.db"), 
+  component.me_controller, 
+  keeperlib.IM:new(component.inventory_controller, sides.up, 1), 
+  "~auto")  -- TODO (@temik-kemper): parametrize args for keeper
 
 state:add_blackbox("keeper", keeper)
 
