@@ -1,6 +1,12 @@
 local function redraw_rows(state, column)
   local row_h = state.sz.listing.row_h
   local row_c = state.listing.pagination.row_c
+
+  -- extremely dirty hack to reset all values on resize, TODO (@rebenkoy): there must be a `clever` way to do this
+  if math.floor(layout.height / state.sz.listing.row_h) ~= row_c then
+    state:dispatch("SET", {path = {"sz", "listing", "row_h"}, value = row_h})
+  end
+
   local field_c = #column.columnSizes
   column:setGridSize(field_c, row_c)
 
