@@ -41,9 +41,9 @@ return function(state, parent)
       scwt_label.text = string.format("S/C/W/T: %d/%d/%d/%d", state.stats.stocked, state.stats.crafting, state.stats.waiting, state.stats.total)
     end
   )
-  state.health:subscribe(
+  state.system:subscribe(
     function(state)
-      running_label.text = string.format("Running: %s", tostring(state.health.running))
+      running_label.text = string.format("Running: %s", tostring(state.system.running))
     end
   )
 

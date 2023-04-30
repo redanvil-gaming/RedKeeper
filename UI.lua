@@ -72,9 +72,11 @@ state = bind_reducers(make_state({
       total = 1
     },
   },
-  health = {
+  system = {
     running = true,
-  }
+    interval = 10,
+    craft_every = 6,
+  },
 }))
 
 keeper = keeperlib.Keeper:new(dblib.DB:new("stock.db"), component.me_controller, keeperlib.IM:new(component.inventory_controller, sides.up, 1))
@@ -91,15 +93,34 @@ local body = require("body")(state, workspace)
 --------------------------------------------------------------------------------
 
 -- initialize all auto calculated dimentions
-workspace:draw()
--- display Loading banner
-screen.clear()
-screen.drawText(1, 1, 0xFFFFFF, "Loading...")
-screen.update()
-
--- apply state
 state:update_all()
--- draw window
 workspace:draw()
+
 -- Start processing events for workspace
-workspace:start()
+
+local function keeper_scrabber()
+  local iter = 1
+  while true do
+    if state.system.running then
+      keeper:refresh()
+      state:dispatch("LOAD_PAGE")
+      if iter == state.system.craft_every then
+        keeper:crafting_iter()
+        iter = 1
+      end
+      iter = iter + 1
+    else
+      iter = 1
+    end
+    os.sleep(state.system.interval)
+  end
+end
+
+local function ui_dispatcher()
+  workspace:start()
+end
+
+thread.waitForAny({
+  thread.create(keeper_scrabber),
+  thread.create(ui_dispatcher),
+})

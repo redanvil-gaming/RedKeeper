@@ -28,7 +28,7 @@ local function redraw_rows(state, column)
   end
   while #column.children < row_c * field_c do
     for f=1, field_c do
-      column:setPosition(1, r, column:addChild(GUI.text(1, 1, state.cs.listing.fg, "")))
+      column:setPosition(f, math.floor(#column.children / field_c) + 1, column:addChild(GUI.text(1, 1, state.cs.listing.fg, "")))
     end
   end
 end
