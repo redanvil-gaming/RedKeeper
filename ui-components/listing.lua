@@ -40,7 +40,7 @@ local function listing_column(state, parent, col)
   local old_update = layout.update
   layout.update = function()
     state:dispatch(string.format("COLUMN_%d_UPDATE", layout._col))
-    old_update()
+    old_update(layout)
   end
 
   return layout
@@ -85,7 +85,7 @@ return function(state, parent)
   local old_update = layout.update
   layout.update = function()
     state:dispatch("LISTING_UPDATE")
-    old_update()
+    old_update(layout)
   end
 
   return layout
