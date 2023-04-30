@@ -3,9 +3,9 @@ return function(state, parent)
 
   menu:addItem("AE2 StockKeeper", 0x0)
 
-  local system_menu = menu:addContextMenuItem("System")
+  menu:addItem("Reboot").onTouch = function() os.execute("reboot") end
 
-  system_menu:addItem("Reboot").onTouch = function() os.execute("reboot") end
+  local system_menu = menu:addContextMenuItem("System")
 
   system_menu:addItem("Pull").onTouch = function() 
     local file, err = io.open("current_branch", "r")
