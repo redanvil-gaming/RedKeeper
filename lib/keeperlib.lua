@@ -71,6 +71,7 @@ function Keeper_obj:get_page(page, size, filter)
   local offset = (page - 1) * size
   local results = {}
   for item in self.db:iter_items() do
+    if size == 0 then return results end
     if offset == 0 and size > 0 then
       local stock = self:item_stock(item)
       local status = self:item_status(item)
