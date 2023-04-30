@@ -56,6 +56,12 @@ state = bind_reducers(make_state({
   },
   listing = {
     content = {},
+    fields = {
+      tier = 4,
+      state = 3,
+      stock = 12,
+      required = 12,
+    },
     pagination = {
       current = 1,
       row_c = 1,
@@ -81,8 +87,16 @@ local body = require("body")(state, workspace)
 
 --------------------------------------------------------------------------------
 
--- Draw workspace content once on screen when program starts
+-- initialize all auto calculated dimentions
 workspace:draw()
+-- display Loading banner
+screen.clear()
+screen.drawText(1, 1, 0xFFFFFF, "Loading...")
+screen.update()
+
+-- apply state
 state:update_all()
+-- draw window
+workspace:draw()
 -- Start processing events for workspace
 workspace:start()

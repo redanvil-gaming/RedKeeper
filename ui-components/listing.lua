@@ -1,12 +1,29 @@
 local function redraw_rows(state, column)
   local row_h = state.sz.listing.row_h
   local row_c = state.listing.pagination.row_c
-  column:setGridSize(column._field_c, row_c)
+  local field_c = #column.columnSizes
+  column:setGridSize(field_c, row_c)
+
+  column:setColumnWidth(1, GUI.SIZE_POLICY_ABSOLUTE, state.sz.listing.fields.tier)
+  column:setColumnWidth(2, GUI.SIZE_POLICY_ABSOLUTE, state.sz.listing.fields.state)
+  column:setColumnWidth(3, GUI.SIZE_POLICY_ABSOLUTE, column.width - (
+    state.sz.listing.fields.tier + state.sz.listing.fields.state + state.sz.listing.fields.stock + state.sz.listing.fields.required
+  ))
+  column:setColumnWidth(4, GUI.SIZE_POLICY_ABSOLUTE, state.sz.listing.fields.stock)
+  column:setColumnWidth(5, GUI.SIZE_POLICY_ABSOLUTE, 1)
+  column:setColumnWidth(6, GUI.SIZE_POLICY_ABSOLUTE, state.sz.listing.fields.required)
+
   for r=1, row_c do
     column:setRowHeight(r, GUI.SIZE_POLICY_ABSOLUTE, row_h)
+    column:setAlignment(1, r, GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_CENTER)
+    column:setAlignment(2, r, GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_CENTER)
+    column:setAlignment(3, r, GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_CENTER)
+    column:setAlignment(4, r, GUI.ALIGNMENT_HORIZONTAL_RIGHT, GUI.ALIGNMENT_VERTICAL_CENTER)
+    column:setAlignment(5, r, GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_CENTER)
+    column:setAlignment(6, r, GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_CENTER)
   end
 
-  if #column.children > row_c * column._field_c then
+  if #column.children > row_c * field_c then
     column:removeChildren(row_c + 1, #column.children)
   end
 end
@@ -31,10 +48,9 @@ end
 local function listing_column(state, parent, col)
   local layout = parent:addChild(GUI.layout(
     1, 1, 1, 1,
-    1, 1
+    6, 1
   ))
-
-  layout._field_c = 6
+  
   layout._col = col
 
   return layout
