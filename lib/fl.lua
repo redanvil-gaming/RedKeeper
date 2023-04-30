@@ -399,14 +399,14 @@ local function items_iterator(state, idx)
   local tier = idx.tier
   local id = idx.id
   if tier == nil then
-    tier, _ = next(state.tiers, nil)
+    _, tier = next(state.tiers, nil)
   end
   if tier == nil then
     return nil
   end
   id, _ = next(state.items[tier], id)
   while id == nil do
-    tier, _ = next(state.tiers, tier)
+    _, tier = next(state.tiers, tier)
     if tier == nil then
       return nil
     end

@@ -31,7 +31,7 @@ local function listing_column(parent, col)
 
   layout.set_row_h = function(layout, row_h) 
     layout._row_h = row_h
-    layout._row_c = math.floor(column.height / row_h)
+    layout._row_c = math.floor(layout.height / row_h)
 
     layout.update()
   end

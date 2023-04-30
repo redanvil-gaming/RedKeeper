@@ -6,6 +6,7 @@ local ChildStateIndex = {}
 
 
 local function get_hidden_fields(state)
+  if type(state) ~= "table" then return {} end
   return getmetatable(state).__hidden_fields
 end
 
@@ -44,7 +45,7 @@ local function set_reducer(state, data)
       table.insert(callbacks, callback)
     end
     if idx == #data.path then
-      current[token] = make_state(data.value)
+      current[token] = make_state(data.value, current, get_hidden_fields(current[token]))
     else
       current = current[token]
     end
@@ -98,10 +99,10 @@ RootStateIndex.update_all = update_all
 ChildStateIndex.update_all = update_all
 
 
-local function create_empty_state(parent)
+local function create_empty_state(parent, hidden_fields)
   local state = {}
   local index = nil
-  state_hidden_fields = { 
+  state_hidden_fields = hidden_fields or { 
     subscriptions = {}
   }
 
@@ -127,14 +128,15 @@ local function create_empty_state(parent)
 end
 
 
-make_state = function(value, parent)
+make_state = function(value, parent, hidden_fields)
   if value == nil then
     value = {}
-  end 
+  end
   if type(value) ~= "table" then
     return value
-  end 
-  local state = create_empty_state(parent)
+  end
+  hidden_fields = hidden_fields or {} 
+  local state = create_empty_state(parent, hidden_fields)
   for k, v in pairs(value) do
     state[k] = make_state(v, state)
   end 

@@ -67,7 +67,6 @@ end
 
 
 function Keeper_obj:get_page(page, size, filter)
-  page = page
   filter = filter or {}
   local offset = (page - 1) * size
   local results = {}
