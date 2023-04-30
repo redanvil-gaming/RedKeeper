@@ -29,15 +29,20 @@ end
 
 
 local function do_reduce(state, tp, data)
+  local level = 1
   while type(tp) == "string" do
     if get_hidden_fields(state).logging then
-      table.insert(get_hidden_fields(state).log, string.format("%s: %s", tp, serialization.serialize(data)))
+      table.insert(get_hidden_fields(state).log, string.format("%d| %s: %s", level, tp, serialization.serialize(data)))
     end
     local reducer = get_hidden_fields(state).reducers[tp]
     if reducer == nil then
       return
     end 
     tp, data = reducer(state, data)
+    level = level + 1
+  end
+  if get_hidden_fields(state).logging then
+    table.insert(get_hidden_fields(state).log, string.format("%d| callbacks: %d", level, #tp))
   end
   return tp
 end
