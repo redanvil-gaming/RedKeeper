@@ -26,7 +26,7 @@ local function redraw_rows(state, column)
   if #column.children > row_c * field_c then
     column:removeChildren(row_c + 1, #column.children)
   end
-  while #column.children < row_c * field_c then
+  while #column.children < row_c * field_c do
     for f=1, field_c do
       column:setPosition(1, r, column:addChild(GUI.text(1, 1, state.cs.listing.fg, "")))
     end
