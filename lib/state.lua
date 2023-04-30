@@ -102,9 +102,8 @@ ChildStateIndex.update_all = update_all
 local function create_empty_state(parent, hidden_fields)
   local state = {}
   local index = nil
-  state_hidden_fields = hidden_fields or { 
-    subscriptions = {}
-  }
+  state_hidden_fields = hidden_fields or {}
+  state_hidden_fields.subscriptions = state_hidden_fields.subscriptions or {}
 
   if parent == nil then
     state_hidden_fields.root_parent = state
