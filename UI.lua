@@ -79,11 +79,10 @@ workspace:addChild(GUI.panel(1, 1, workspace.width, workspace.height, state.cs.m
 local menu = require("menu")(state, workspace, state.cs.menu)
 local body = require("body")(state, workspace)
 
-state:update_all()
-
 --------------------------------------------------------------------------------
 
 -- Draw workspace content once on screen when program starts
 workspace:draw()
+state:update_all()
 -- Start processing events for workspace
 workspace:start()

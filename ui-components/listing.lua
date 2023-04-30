@@ -36,14 +36,6 @@ local function listing_column(state, parent, col)
 
   layout._field_c = 6
   layout._col = col
-
-  local old_update = layout.update
-  layout.update = function()
-    redraw_rows(layout, state)
-    set_column_values(layout, state)
-    old_update(layout)
-  end
-
   return layout
 end
 
@@ -75,12 +67,6 @@ return function(state, parent)
     1, 1
   ))
 
-  local old_update = layout.update
-  layout.update = function()
-    old_update(layout)
-    redraw_columns(state, layout)
-  end
-
   state.sz.listing:subscribe(function(state)  
     state:dispatch("SET_PAGE_SIZE", {cols=state.sz.listing.columns, rows=math.floor(layout.height / state.sz.listing.row_h)})
   end)
@@ -88,13 +74,6 @@ return function(state, parent)
   state.listing.pagination:subscribe(function(state)
     state:dispatch("LOAD_PAGE")
   end)
-
-  state.listing.content:subscribe(function(state)
-    for idx, col in ipairs(layout.children) do
-      col:update()
-    end
-  end)
-
 
   return layout
 end
