@@ -83,7 +83,7 @@ return function(state, parent)
 
   state.sz.listing:subscribe(function(state)  
     state:dispatch("MULTI", {
-      {type="SET_PAGE_SIZE", data={cols=state.sz.listing.columns, rows=math.floor(layout.height / state.sz.listing.row_h)}}
+      {type="SET_PAGE_SIZE", data={cols=state.sz.listing.columns, rows=math.floor(layout.height / state.sz.listing.row_h)}},
       {type="SET_PAGE", data=1},
     })
     layout.update()

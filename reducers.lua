@@ -1,6 +1,6 @@
 local reducers = {}
 
-function reducer.set_page_size(state, data)
+function reducers.set_page_size(state, data)
   state:dispatch("MULTI", {
     {type="SET", data={path = {"listing", "pagination", "row_c"}, value = data.rows}},
     {type="SET", data={path = {"listing", "pagination", "size"}, value = data.cols * data.rows}},
@@ -31,7 +31,7 @@ function reducers.load_page(state, data)
   state:dispatch("SET", {path = {"listing", "content"}, value=state:get_blackbox("keeper"):get_page(
     state.listing.pagination.current, 
     state.listing.pagination.size, 
-    state.listing.pagination.filter,
+    state.listing.pagination.filter
   )})
   return {}
 end
