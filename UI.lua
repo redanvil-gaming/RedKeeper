@@ -3,7 +3,7 @@ local keeperlib = require "lib.keeperlib"
 local dblib = require "lib.fl"
 local bind_reducers = require "reducers"
 
-local state = bind_reducers(make_state({
+state = bind_reducers(make_state({
   sz = {
     body = {
       y_offset = 2,
@@ -58,7 +58,9 @@ local state = bind_reducers(make_state({
     content = {},
     pagination = {
       current = 1,
-      total = 5,
+      row_c = 1,
+      size = 1,
+      total = 1
     },
   },
   health = {
@@ -70,7 +72,7 @@ keeper = keeperlib.Keeper:new(dblib.DB:new("stock.db"), component.me_controller,
 
 state:add_blackbox("keeper", keeper)
 
-local workspace = GUI.workspace()
+workspace = GUI.workspace()
 
 workspace:addChild(GUI.panel(1, 1, workspace.width, workspace.height, state.cs.main.bg))
 

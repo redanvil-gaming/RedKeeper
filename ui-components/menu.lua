@@ -49,6 +49,7 @@ return function(state, parent)
 
   menu:addItem("Lua").onTouch = function() 
     os.execute("clear")
+    screen.drawRectangle(1, 1, menu.firtParent.width, menu.firtParent.height, 0, 0, " ")
     os.execute("lua")
     menu.firtParent:draw()
   end

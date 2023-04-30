@@ -1,5 +1,13 @@
 local reducers = {}
 
+function reducer.set_page_size(state, data)
+  state:dispatch("MULTI", {
+    {type="SET", data={path = {"listing", "pagination", "row_c"}, value = data.rows}},
+    {type="SET", data={path = {"listing", "pagination", "size"}, value = data.cols * data.rows}},
+  })
+  return {}
+end
+
 function reducers.set_page(state, data)
   state:dispatch("SET", {path = {"listing", "pagination", "current"}, value = data})
   return {}
@@ -20,7 +28,11 @@ function reducers.inc_page(state, data)
 end
 
 function reducers.load_page(state, data)
-  state:dispatch("SET", {path = {"listing", "content"}, value=state:get_blackbox("keeper"):get_page(data.page, data.size, data.filter)})
+  state:dispatch("SET", {path = {"listing", "content"}, value=state:get_blackbox("keeper"):get_page(
+    state.listing.pagination.current, 
+    state.listing.pagination.size, 
+    state.listing.pagination.filter,
+  )})
   return {}
 end
 

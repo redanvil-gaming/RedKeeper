@@ -1,7 +1,6 @@
 local function redraw_rows(column, state)
   local row_h = state.sz.listing.row_h
-  local row_c = math.floor(column.height / row_h)
-
+  local row_c = state.listing.pagination.row_c
   column:setGridSize(column._field_c, row_c)
   for r=1, row_c do
     column:setRowHeight(r, GUI.SIZE_POLICY_ABSOLUTE, row_h)
@@ -14,7 +13,7 @@ end
 
 local function set_column_values(column, state)
   local row_h = state.sz.listing.row_h
-  local row_c = math.floor(column.height / row_h)
+  local row_c = state.listing.pagination.row_c
   for r=1, row_c do
     local item = state.listing.content[(column._col - 1) * row_c + r]
     if item == nil then
@@ -84,14 +83,14 @@ return function(state, parent)
 
   state.sz.listing:subscribe(function(state)  
     state:dispatch("MULTI", {
-      {type="LOAD_PAGE", data={page=state.listing.pagination.current, size=#layout.children}},
+      {type="SET_PAGE_SIZE", data={cols=state.sz.listing.columns, rows=math.floor(layout.height / state.sz.listing.row_h)}}
       {type="SET_PAGE", data=1},
     })
     layout.update()
   end)
 
   state.listing.pagination:subscribe(function(state)
-    state:dispatch("LOAD_PAGE", {page=state.listing.pagination.current, size=#layout.children})
+    state:dispatch("LOAD_PAGE")
   end)
 
   state.listing.content:subscribe(function(state)
