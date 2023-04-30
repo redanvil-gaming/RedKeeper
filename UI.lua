@@ -44,6 +44,9 @@ state = bind_reducers(make_state({
         pressed_bg = 0x363636,
         pressed_fg = 0xFFFFFF,
       }
+    },
+    listing = {
+      fg = 0xFFFFFF,
     }
   },
   cpus = {
