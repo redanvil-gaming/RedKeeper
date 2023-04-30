@@ -13,22 +13,22 @@ return function(state, parent)
   local prev = footer:addChild(GUI.adaptiveButton(
     1, 1,
     0, 0, 
-    state.cs.footer.button.bg, state.cs.footer.button.fg, 
-    state.cs.footer.button.pressed_bg, state.cs.footer.button.pressed_fg,
+    0, 0xFFFFFF, 
+    0, 0xFFFFFF,
     "< previous"
   ))
 
   local page_counter = footer:addChild(GUI.text(
     1, 1,
-    state.cs.footer.fg,
+    0xFFFFFF,
     "???"
   ))
 
   local nxt = footer:addChild(GUI.adaptiveButton(
     1, 1,
     0, 0, 
-    state.cs.footer.button.bg, state.cs.footer.button.fg, 
-    state.cs.footer.button.pressed_bg, state.cs.footer.button.pressed_fg,
+    0, 0xFFFFFF, 
+    0, 0xFFFFFF,
     "next >"
   ))
 

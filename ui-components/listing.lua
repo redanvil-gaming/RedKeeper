@@ -1,4 +1,4 @@
-local function redraw_rows(column, state)
+local function redraw_rows(state, column)
   local row_h = state.sz.listing.row_h
   local row_c = state.listing.pagination.row_c
   column:setGridSize(column._field_c, row_c)
@@ -11,7 +11,7 @@ local function redraw_rows(column, state)
   end
 end
 
-local function set_column_values(column, state)
+local function set_column_values(state, column)
   local row_h = state.sz.listing.row_h
   local row_c = state.listing.pagination.row_c
   for r=1, row_c do
@@ -37,12 +37,6 @@ local function listing_column(state, parent, col)
   layout._field_c = 6
   layout._col = col
 
-  local old_update = layout.update
-  layout.update = function()
-    state:dispatch(string.format("COLUMN_%d_UPDATE", layout._col))
-    old_update(layout)
-  end
-
   return layout
 end
 
@@ -65,6 +59,8 @@ local function redraw_columns(state, listing)
   for col=1, col_c do
     listing:setPosition(col, 1, listing.children[col])
     listing:setFitting(col, 1, true, true)
+    redraw_rows(state, listing.children[col])
+    set_column_values(state, listing.children[col])
   end
 end
 
@@ -82,11 +78,9 @@ return function(state, parent)
     state:dispatch("LOAD_PAGE")
   end)
 
-  local old_update = layout.update
-  layout.update = function()
-    state:dispatch("LISTING_UPDATE")
-    old_update(layout)
-  end
-
+  state.listing.content:subscribe(function(state)
+    redraw_columns(state, layout)
+  end)
+  
   return layout
 end
